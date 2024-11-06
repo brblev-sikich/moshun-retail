@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Leadership Archives | Moshun</title>
+	<atom:link href="/department/leadership/feed/" rel="self" type="application/rss+xml" />
+	<link>/department/leadership/</link>
+	<description>Moshun - Movement Control</description>
+	<lastBuildDate>Mon, 19 Feb 2024 21:28:42 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.6.2</generator>
+
+<image>
+	<url>/wp-content/uploads/2024/02/icon-colour-w-tm-150x150-1.png</url>
+	<title>Leadership Archives | Moshun</title>
+	<link>/department/leadership/</link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+	<item>
+		<title>Steve Barger</title>
+		<link>/our-company/team/steve-barger/</link>
+		
+		<dc:creator><![CDATA[sikichmarketingteam]]></dc:creator>
+		<pubDate>Sat, 17 Feb 2024 15:51:28 +0000</pubDate>
+				<guid isPermaLink="false">https://moshun.sikich.digital/?post_type=people&#038;p=428</guid>
+
+					<description><![CDATA[<p>The post <a href="/our-company/team/steve-barger/">Steve Barger</a> appeared first on <a href="/">Moshun</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>The post <a href="/our-company/team/steve-barger/">Steve Barger</a> appeared first on <a href="/">Moshun</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Terry Lydon</title>
+		<link>/our-company/team/terry-lydon/</link>
+		
+		<dc:creator><![CDATA[sikichmarketingteam]]></dc:creator>
+		<pubDate>Sat, 17 Feb 2024 15:47:46 +0000</pubDate>
+				<guid isPermaLink="false">https://moshun.sikich.digital/?post_type=people&#038;p=426</guid>
+
+					<description><![CDATA[<p>The post <a href="/our-company/team/terry-lydon/">Terry Lydon</a> appeared first on <a href="/">Moshun</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>The post <a href="/our-company/team/terry-lydon/">Terry Lydon</a> appeared first on <a href="/">Moshun</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Tim Boundy</title>
+		<link>/our-company/team/tim-boundy/</link>
+		
+		<dc:creator><![CDATA[sikichmarketingteam]]></dc:creator>
+		<pubDate>Fri, 16 Feb 2024 13:48:45 +0000</pubDate>
+				<guid isPermaLink="false">https://moshun.sikich.digital/?post_type=people&#038;p=282</guid>
+
+					<description><![CDATA[<p>The post <a href="/our-company/team/tim-boundy/">Tim Boundy</a> appeared first on <a href="/">Moshun</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>The post <a href="/our-company/team/tim-boundy/">Tim Boundy</a> appeared first on <a href="/">Moshun</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>
