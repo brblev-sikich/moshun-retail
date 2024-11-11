@@ -58,13 +58,6 @@
 		</image:image>
 	</url>
 	<url>
-		<loc>/contact-us/</loc>
-		<lastmod>2024-08-13T18:03:42+00:00</lastmod>
-		<image:image>
-			<image:loc>/wp-content/uploads/2024/02/Moshun-logo-300x89.png</image:loc>
-		</image:image>
-	</url>
-	<url>
 		<loc>/design-lab/</loc>
 		<lastmod>2024-10-01T21:18:10+00:00</lastmod>
 		<image:image>
@@ -74,5 +67,12 @@
 	<url>
 		<loc>/our-company/team/</loc>
 		<lastmod>2024-10-09T16:28:12+00:00</lastmod>
+	</url>
+	<url>
+		<loc>/contact-us/</loc>
+		<lastmod>2024-11-08T16:25:42+00:00</lastmod>
+		<image:image>
+			<image:loc>/wp-content/uploads/2024/02/Moshun-logo-300x89.png</image:loc>
+		</image:image>
 	</url>
 </urlset>
