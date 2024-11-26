@@ -6,12 +6,12 @@
 	<title type="text">Moshun</title>
 	<subtitle type="text">Moshun - Movement Control</subtitle>
 
-	<updated>2024-11-11T15:38:36Z</updated>
+	<updated>2024-11-25T20:23:06Z</updated>
 
 	<link rel="alternate" type="text/html" href="/" />
 	<id>/feed/atom/</id>
 	<link rel="self" type="application/atom+xml" href="/feed/atom/" />
 
-	<generator uri="https://wordpress.org/" version="6.6.2">WordPress</generator>
+	<generator uri="https://wordpress.org/" version="6.7.1">WordPress</generator>
 <icon>/wp-content/uploads/2024/02/icon-colour-w-tm-150x150-1.png</icon>
 </feed>
