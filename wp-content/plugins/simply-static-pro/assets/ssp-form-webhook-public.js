@@ -30,6 +30,11 @@ if (null !== form_config_element) {
 
             // Pass the header to the request.
             requestData.headers = headers;
+        } else {
+            // Set default headers.
+            requestData.headers = {
+                'Accept': 'application/json',
+            };
         }
 
         // Send data via fetch to URL
