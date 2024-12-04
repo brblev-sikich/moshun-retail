@@ -32,10 +32,6 @@
 		<lastmod>2024-11-08T21:13:21+00:00</lastmod>
 	</url>
 	<url>
-		<loc>/products/smartehinge-platform/</loc>
-		<lastmod>2024-11-08T21:13:41+00:00</lastmod>
-	</url>
-	<url>
 		<loc>/products/motor-module/</loc>
 		<lastmod>2024-11-08T21:13:48+00:00</lastmod>
 	</url>
@@ -50,5 +46,9 @@
 	<url>
 		<loc>/products/audio-module/</loc>
 		<lastmod>2024-11-08T21:14:13+00:00</lastmod>
+	</url>
+	<url>
+		<loc>/products/smartehinge-platform/</loc>
+		<lastmod>2024-11-22T19:53:03+00:00</lastmod>
 	</url>
 </urlset>
