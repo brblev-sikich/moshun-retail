@@ -58,95 +58,532 @@ function createQueryClient() {
 
 /***/ }),
 
-/***/ "../assets/dev/js/utils/react.js":
-/*!***************************************!*\
-  !*** ../assets/dev/js/utils/react.js ***!
-  \***************************************/
+/***/ "../app/assets/js/hooks/use-ajax.js":
+/*!******************************************!*\
+  !*** ../app/assets/js/hooks/use-ajax.js ***!
+  \******************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = useAjax;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ "../node_modules/@babel/runtime/regenerator/index.js"));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "../node_modules/@babel/runtime/helpers/asyncToGenerator.js"));
+var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "../node_modules/@babel/runtime/helpers/slicedToArray.js"));
+var _react = __webpack_require__(/*! react */ "react");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function useAjax() {
+  var _useState = (0, _react.useState)(null),
+    _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+    ajax = _useState2[0],
+    setAjax = _useState2[1],
+    initialStatusKey = 'initial',
+    uploadInitialState = {
+      status: initialStatusKey,
+      isComplete: false,
+      response: null
+    },
+    _useState3 = (0, _react.useState)(uploadInitialState),
+    _useState4 = (0, _slicedToArray2.default)(_useState3, 2),
+    ajaxState = _useState4[0],
+    setAjaxState = _useState4[1],
+    ajaxActions = {
+      reset: function reset() {
+        return setAjaxState(initialStatusKey);
+      }
+    };
+  var runRequest = /*#__PURE__*/function () {
+    var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(config) {
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            return _context.abrupt("return", new Promise(function (resolve, reject) {
+              var formData = new FormData();
+              if (config.data) {
+                for (var key in config.data) {
+                  formData.append(key, config.data[key]);
+                }
+                if (!config.data.nonce) {
+                  formData.append('_nonce', elementorCommon.config.ajax.nonce);
+                }
+              }
+              var options = _objectSpread(_objectSpread({
+                type: 'post',
+                url: elementorCommon.config.ajax.url,
+                headers: {},
+                cache: false,
+                contentType: false,
+                processData: false
+              }, config), {}, {
+                data: formData,
+                success: function success(response) {
+                  resolve(response);
+                },
+                error: function error(_error) {
+                  reject(_error);
+                }
+              });
+              jQuery.ajax(options);
+            }));
+          case 1:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function runRequest(_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+  (0, _react.useEffect)(function () {
+    if (ajax) {
+      runRequest(ajax).then(function (response) {
+        var status = response.success ? 'success' : 'error';
+        setAjaxState(function (prevState) {
+          return _objectSpread(_objectSpread({}, prevState), {}, {
+            status: status,
+            response: response === null || response === void 0 ? void 0 : response.data
+          });
+        });
+      }).catch(function (error) {
+        var _error$responseJSON;
+        var response = 408 === error.status ? 'timeout' : (_error$responseJSON = error.responseJSON) === null || _error$responseJSON === void 0 ? void 0 : _error$responseJSON.data;
+        setAjaxState(function (prevState) {
+          return _objectSpread(_objectSpread({}, prevState), {}, {
+            status: 'error',
+            response: response
+          });
+        });
+      }).finally(function () {
+        setAjaxState(function (prevState) {
+          return _objectSpread(_objectSpread({}, prevState), {}, {
+            isComplete: true
+          });
+        });
+      });
+    }
+  }, [ajax]);
+  return {
+    ajax: ajax,
+    setAjax: setAjax,
+    ajaxState: ajaxState,
+    ajaxActions: ajaxActions,
+    runRequest: runRequest
+  };
+}
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/app/app.js":
+/*!*************************************************!*\
+  !*** ../modules/checklist/assets/js/app/app.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
 var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = void 0;
-var React = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
-var ReactDOM = _interopRequireWildcard(__webpack_require__(/*! react-dom */ "react-dom"));
-var _client = __webpack_require__(/*! react-dom/client */ "../node_modules/react-dom/client.js");
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
+var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "../node_modules/@babel/runtime/helpers/toConsumableArray.js"));
+var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
+var _query = __webpack_require__(/*! @elementor/query */ "../node_modules/@elementor/query/dist/index.js");
+var _editorV1Adapters = __webpack_require__(/*! @elementor/editor-v1-adapters */ "@elementor/editor-v1-adapters");
+var _checklist = _interopRequireDefault(__webpack_require__(/*! ./components/checklist */ "../modules/checklist/assets/js/app/components/checklist.js"));
+var _functions = __webpack_require__(/*! ../utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-/**
- * Support conditional rendering of a React App to the DOM, based on the React version.
- * We use `createRoot` when available, but fallback to `ReactDOM.render` for older versions.
- *
- * @param { React.ReactElement } app        The app to render.
- * @param { HTMLElement }        domElement The DOM element to render the app into.
- *
- * @return {{ unmount: () => void }} The unmount function.
- */
-function render(app, domElement) {
-  var unmountFunction;
-  try {
-    var root = (0, _client.createRoot)(domElement);
-    root.render(app);
-    unmountFunction = function unmountFunction() {
-      root.unmount();
-    };
-  } catch (e) {
-    // eslint-disable-next-line react/no-deprecated
-    ReactDOM.render(app, domElement);
-    unmountFunction = function unmountFunction() {
-      // eslint-disable-next-line react/no-deprecated
-      ReactDOM.unmountComponentAtNode(domElement);
-    };
-  }
-  return {
-    unmount: unmountFunction
+var App = function App() {
+  var isRTL = elementorCommon.config.isRTL,
+    _useQuery = (0, _query.useQuery)({
+      queryKey: ['steps'],
+      queryFn: _functions.fetchSteps,
+      gcTime: 0,
+      enabled: false
+    }),
+    stepsError = _useQuery.error,
+    steps = _useQuery.data,
+    refetchSteps = _useQuery.refetch,
+    _useQuery2 = (0, _query.useQuery)({
+      queryKey: ['statusData'],
+      queryFn: _functions.fetchUserProgress,
+      gcTime: 0,
+      enabled: false
+    }),
+    userProgressError = _useQuery2.error,
+    userProgress = _useQuery2.data,
+    refetchUserProgress = _useQuery2.refetch;
+  var fetchData = function fetchData() {
+    refetchSteps();
+    refetchUserProgress();
   };
-}
-var _default = {
-  render: render
+  (0, _react.useEffect)(function () {
+    fetchData();
+    return (0, _editorV1Adapters.__privateListenTo)((0, _editorV1Adapters.commandEndEvent)('document/save/save'), function (_ref) {
+      var _args$document, _args$document$config;
+      var args = _ref.args;
+      if ('kit' === (args === null || args === void 0 ? void 0 : (_args$document = args.document) === null || _args$document === void 0 ? void 0 : (_args$document$config = _args$document.config) === null || _args$document$config === void 0 ? void 0 : _args$document$config.type)) {
+        fetchData();
+      }
+    });
+  }, []);
+  if (userProgressError || !userProgress || stepsError || !(steps !== null && steps !== void 0 && steps.length)) {
+    return null;
+  }
+  return /*#__PURE__*/_react.default.createElement(_ui.DirectionProvider, {
+    rtl: isRTL
+  }, /*#__PURE__*/_react.default.createElement(_ui.ThemeProvider, {
+    colorScheme: "light"
+  }, /*#__PURE__*/_react.default.createElement(_checklist.default, {
+    steps: (0, _toConsumableArray2.default)(steps),
+    userProgress: userProgress
+  })));
 };
+var _default = App;
 exports["default"] = _default;
 
 /***/ }),
 
-/***/ "../modules/notifications/assets/js/api/index.js":
-/*!*******************************************************!*\
-  !*** ../modules/notifications/assets/js/api/index.js ***!
-  \*******************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ "../modules/checklist/assets/js/app/components/checklist-card-content.js":
+/*!*******************************************************************************!*\
+  !*** ../modules/checklist/assets/js/app/components/checklist-card-content.js ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.getNotifications = void 0;
-var request = function request(endpoint) {
-  var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  return new Promise(function (resolve, reject) {
-    elementorCommon.ajax.addRequest(endpoint, {
-      success: resolve,
-      error: reject,
-      data: data
+exports["default"] = void 0;
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ "../node_modules/@babel/runtime/regenerator/index.js"));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "../node_modules/@babel/runtime/helpers/asyncToGenerator.js"));
+var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
+var _i18n = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js"));
+var _functions = __webpack_require__(/*! ../../utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+var _consts = __webpack_require__(/*! ../../utils/consts */ "../modules/checklist/assets/js/utils/consts.js");
+var IS_MARKED_COMPLETED = _consts.STEP.IS_MARKED_COMPLETED,
+  IS_ABSOLUTE_COMPLETED = _consts.STEP.IS_ABSOLUTE_COMPLETED,
+  IS_IMMUTABLE_COMPLETED = _consts.STEP.IS_IMMUTABLE_COMPLETED;
+var DONE = _consts.MIXPANEL_CHECKLIST_STEPS.DONE,
+  UNDONE = _consts.MIXPANEL_CHECKLIST_STEPS.UNDONE,
+  ACTION = _consts.MIXPANEL_CHECKLIST_STEPS.ACTION,
+  UPGRADE = _consts.MIXPANEL_CHECKLIST_STEPS.UPGRADE;
+var ChecklistCardContent = function ChecklistCardContent(_ref) {
+  var step = _ref.step,
+    setSteps = _ref.setSteps;
+  var _step$config = step.config,
+    id = _step$config.id,
+    description = _step$config.description,
+    learnMoreUrl = _step$config.learn_more_url,
+    learnMoreText = _step$config.learn_more_text,
+    imageSrc = _step$config.image_src,
+    promotionData = _step$config.promotion_data;
+  var ctaText = promotionData ? (promotionData === null || promotionData === void 0 ? void 0 : promotionData.text) || (0, _i18n.__)('Upgrade Now', 'elementor') : step.config.cta_text,
+    ctaUrl = promotionData ? promotionData.url : step.config.cta_url,
+    isAbsoluteCompleted = step[IS_ABSOLUTE_COMPLETED],
+    isImmutableCompleted = step[IS_IMMUTABLE_COMPLETED],
+    isMarkedCompleted = step[IS_MARKED_COMPLETED],
+    shouldShowMarkAsDone = !isAbsoluteCompleted && !isImmutableCompleted && !promotionData;
+  var redirectHandler = /*#__PURE__*/function () {
+    var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            if (promotionData) {
+              (0, _functions.addMixpanelTrackingChecklistSteps)(step.config.id, UPGRADE);
+            } else {
+              (0, _functions.addMixpanelTrackingChecklistSteps)(step.config.id, ACTION);
+            }
+            if (!(!elementor || !_consts.STEP_IDS_TO_COMPLETE_IN_EDITOR.includes(id) || !_consts.PANEL_ROUTES[id])) {
+              _context.next = 3;
+              break;
+            }
+            return _context.abrupt("return", window.open(ctaUrl, '_blank'));
+          case 3:
+            _context.next = 5;
+            return $e.run('panel/global/open');
+          case 5:
+            $e.route(_consts.PANEL_ROUTES[id]);
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function redirectHandler() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  var toggleMarkAsDone = /*#__PURE__*/function () {
+    var _ref3 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var currState;
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
+          case 0:
+            currState = isMarkedCompleted;
+            if (isMarkedCompleted) {
+              (0, _functions.addMixpanelTrackingChecklistSteps)(step.config.id, UNDONE);
+            } else {
+              (0, _functions.addMixpanelTrackingChecklistSteps)(step.config.id, DONE);
+            }
+            _context2.prev = 2;
+            updateStepsState(IS_MARKED_COMPLETED, !currState);
+            _context2.next = 6;
+            return (0, _functions.updateStep)(id, (0, _defineProperty2.default)({}, IS_MARKED_COMPLETED, !currState));
+          case 6:
+            _context2.next = 11;
+            break;
+          case 8:
+            _context2.prev = 8;
+            _context2.t0 = _context2["catch"](2);
+            updateStepsState(IS_MARKED_COMPLETED, currState);
+          case 11:
+          case "end":
+            return _context2.stop();
+        }
+      }, _callee2, null, [[2, 8]]);
+    }));
+    return function toggleMarkAsDone() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+  var updateStepsState = function updateStepsState(key, value) {
+    setSteps(function (steps) {
+      return steps.map(function (iteratedStep) {
+        return (0, _functions.getAndUpdateStep)(step.config.id, iteratedStep, key, value);
+      });
     });
-  });
+  };
+  return /*#__PURE__*/_react.default.createElement(_ui.Card, {
+    elevation: 0,
+    square: true,
+    "data-step-id": id
+  }, /*#__PURE__*/_react.default.createElement(_ui.CardMedia, {
+    image: imageSrc,
+    sx: {
+      height: 180
+    }
+  }), /*#__PURE__*/_react.default.createElement(_ui.CardContent, null, /*#__PURE__*/_react.default.createElement(_ui.Typography, {
+    variant: "body2",
+    color: "text.secondary",
+    component: "p"
+  }, description + ' ', /*#__PURE__*/_react.default.createElement(_ui.Link, {
+    href: learnMoreUrl,
+    target: "_blank",
+    rel: "noreferrer",
+    underline: "hover",
+    color: "info.main",
+    noWrap: true
+  }, learnMoreText))), /*#__PURE__*/_react.default.createElement(_ui.CardActions, null, shouldShowMarkAsDone ? /*#__PURE__*/_react.default.createElement(_ui.Button, {
+    size: "small",
+    color: "secondary",
+    variant: "text",
+    onClick: toggleMarkAsDone
+  }, isMarkedCompleted ? (0, _i18n.__)('Unmark as done', 'elementor') : (0, _i18n.__)('Mark as done', 'elementor')) : null, /*#__PURE__*/_react.default.createElement(_ui.Button, {
+    color: promotionData ? 'promotion' : 'primary',
+    size: "small",
+    variant: "contained",
+    onClick: redirectHandler
+  }, ctaText)));
 };
-var getNotifications = function getNotifications() {
-  return request('notifications_get');
+var _default = ChecklistCardContent;
+exports["default"] = _default;
+ChecklistCardContent.propTypes = {
+  step: _propTypes.default.object.isRequired,
+  setSteps: _propTypes.default.func.isRequired
 };
-exports.getNotifications = getNotifications;
 
 /***/ }),
 
-/***/ "../modules/notifications/assets/js/components/editor-drawer.js":
-/*!**********************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/editor-drawer.js ***!
-  \**********************************************************************/
+/***/ "../modules/checklist/assets/js/app/components/checklist-item.js":
+/*!***********************************************************************!*\
+  !*** ../modules/checklist/assets/js/app/components/checklist-item.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js"));
+var _checklistCardContent = _interopRequireDefault(__webpack_require__(/*! ./checklist-card-content */ "../modules/checklist/assets/js/app/components/checklist-card-content.js"));
+var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
+var _icons = __webpack_require__(/*! @elementor/icons */ "@elementor/icons");
+var _functions = __webpack_require__(/*! ../../utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+var _consts = __webpack_require__(/*! ../../utils/consts */ "../modules/checklist/assets/js/utils/consts.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+var PROMOTION_DATA = _consts.STEP.PROMOTION_DATA;
+var TITLE = _consts.MIXPANEL_CHECKLIST_STEPS.TITLE,
+  ACCORDION_SECTION = _consts.MIXPANEL_CHECKLIST_STEPS.ACCORDION_SECTION;
+function CheckListItem(props) {
+  var expandedIndex = props.expandedIndex,
+    setExpandedIndex = props.setExpandedIndex,
+    setSteps = props.setSteps,
+    index = props.index,
+    step = props.step,
+    chevronStyle = index === expandedIndex ? {
+      transform: 'rotate(180deg)'
+    } : {},
+    isChecked = (0, _functions.isStepChecked)(step),
+    promotionData = step.config[PROMOTION_DATA];
+  var handleExpandClick = function handleExpandClick() {
+    (0, _functions.addMixpanelTrackingChecklistSteps)(step.config.id, TITLE, ACCORDION_SECTION);
+    setExpandedIndex(index === expandedIndex ? -1 : index);
+  };
+  var getUpgradeIcon = function getUpgradeIcon() {
+    return 'default' === (promotionData === null || promotionData === void 0 ? void 0 : promotionData.icon) ? /*#__PURE__*/_react.default.createElement(_icons.UpgradeIcon, {
+      color: "promotion",
+      sx: {
+        mr: 1
+      }
+    }) : /*#__PURE__*/_react.default.createElement(_ui.SvgIcon, {
+      color: "promotion",
+      sx: {
+        mr: 1
+      }
+    }, /*#__PURE__*/_react.default.createElement("img", {
+      src: promotionData === null || promotionData === void 0 ? void 0 : promotionData.icon,
+      alt: promotionData.iconAlt || ''
+    }));
+  };
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_ui.ListItemButton, {
+    onClick: handleExpandClick,
+    "data-step-id": step.config.id,
+    dense: true
+  }, /*#__PURE__*/_react.default.createElement(_ui.ListItemIcon, null, /*#__PURE__*/_react.default.createElement(_ui.Checkbox, {
+    "data-is-checked": isChecked,
+    icon: /*#__PURE__*/_react.default.createElement(_icons.RadioButtonUncheckedIcon, null),
+    checkedIcon: /*#__PURE__*/_react.default.createElement(_icons.CircleCheckFilledIcon, {
+      color: "primary"
+    }),
+    edge: "start",
+    checked: isChecked,
+    tabIndex: -1,
+    inputProps: {
+      'aria-labelledby': step.config.title
+    }
+  })), /*#__PURE__*/_react.default.createElement(_ui.ListItemText, {
+    primary: step.config.title,
+    primaryTypographyProps: {
+      variant: 'body2'
+    }
+  }), promotionData ? getUpgradeIcon() : null, /*#__PURE__*/_react.default.createElement(_icons.ChevronDownIcon, {
+    sx: _objectSpread(_objectSpread({}, chevronStyle), {}, {
+      transition: '300ms'
+    })
+  })), /*#__PURE__*/_react.default.createElement(_ui.Collapse, {
+    in: index === expandedIndex
+  }, /*#__PURE__*/_react.default.createElement(_checklistCardContent.default, {
+    step: step,
+    setSteps: setSteps
+  })));
+}
+var _default = CheckListItem;
+exports["default"] = _default;
+CheckListItem.propTypes = {
+  step: _propTypes.default.object.isRequired,
+  expandedIndex: _propTypes.default.number,
+  setExpandedIndex: _propTypes.default.func.isRequired,
+  setSteps: _propTypes.default.func.isRequired,
+  index: _propTypes.default.number.isRequired
+};
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/app/components/checklist-wrapper.js":
+/*!**************************************************************************!*\
+  !*** ../modules/checklist/assets/js/app/components/checklist-wrapper.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
+var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "../node_modules/@babel/runtime/helpers/slicedToArray.js"));
+var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
+var _checklistItem = _interopRequireDefault(__webpack_require__(/*! ./checklist-item */ "../modules/checklist/assets/js/app/components/checklist-item.js"));
+var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js"));
+var _successMessage = _interopRequireDefault(__webpack_require__(/*! ./success-message */ "../modules/checklist/assets/js/app/components/success-message.js"));
+var _functions = __webpack_require__(/*! ../../utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var ChecklistWrapper = function ChecklistWrapper(_ref) {
+  var steps = _ref.steps,
+    setSteps = _ref.setSteps,
+    isMinimized = _ref.isMinimized;
+  var _useState = (0, _react.useState)(-1),
+    _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+    expandedIndex = _useState2[0],
+    setExpandedIndex = _useState2[1];
+  var isChecklistCompleted = steps.filter(_functions.isStepChecked).length === steps.length;
+  return /*#__PURE__*/_react.default.createElement(_ui.Box, {
+    sx: {
+      transition: '400ms',
+      maxHeight: isMinimized ? 0 : '645px'
+    }
+  }, /*#__PURE__*/_react.default.createElement(_ui.List, {
+    component: "div",
+    sx: {
+      py: 0
+    }
+  }, steps.map(function (step, index) {
+    return /*#__PURE__*/_react.default.createElement(_react.Fragment, {
+      key: index
+    }, index ? /*#__PURE__*/_react.default.createElement(_ui.Divider, null) : null, /*#__PURE__*/_react.default.createElement(_checklistItem.default, {
+      step: step,
+      setSteps: setSteps,
+      setExpandedIndex: setExpandedIndex,
+      expandedIndex: expandedIndex,
+      index: index
+    }));
+  })), isChecklistCompleted ? /*#__PURE__*/_react.default.createElement(_successMessage.default, null) : null);
+};
+var _default = ChecklistWrapper;
+exports["default"] = _default;
+ChecklistWrapper.propTypes = {
+  steps: _propTypes.default.array.isRequired,
+  setSteps: _propTypes.default.func.isRequired,
+  isMinimized: _propTypes.default.bool.isRequired
+};
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/app/components/checklist.js":
+/*!******************************************************************!*\
+  !*** ../modules/checklist/assets/js/app/components/checklist.js ***!
+  \******************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -158,44 +595,205 @@ var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.EditorDrawer = void 0;
+exports["default"] = void 0;
 var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ "../node_modules/@babel/runtime/regenerator/index.js"));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "../node_modules/@babel/runtime/helpers/asyncToGenerator.js"));
 var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "../node_modules/@babel/runtime/helpers/slicedToArray.js"));
-var _whatsNew = __webpack_require__(/*! ./whats-new */ "../modules/notifications/assets/js/components/whats-new.js");
+var _header = _interopRequireDefault(__webpack_require__(/*! ./header */ "../modules/checklist/assets/js/app/components/header.js"));
+var _checklistWrapper = _interopRequireDefault(__webpack_require__(/*! ./checklist-wrapper */ "../modules/checklist/assets/js/app/components/checklist-wrapper.js"));
+var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
+var _consts = __webpack_require__(/*! ../../utils/consts */ "../modules/checklist/assets/js/utils/consts.js");
+var _functions = __webpack_require__(/*! ../../utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-var EditorDrawer = function EditorDrawer(_ref) {
-  var _ref$anchorPosition = _ref.anchorPosition,
-    anchorPosition = _ref$anchorPosition === void 0 ? 'left' : _ref$anchorPosition;
-  var _useState = (0, _react.useState)(true),
+var IS_POPUP_MINIMIZED = _consts.USER_PROGRESS.IS_POPUP_MINIMIZED;
+var Checklist = function Checklist(props) {
+  var _useState = (0, _react.useState)(props.steps),
     _useState2 = (0, _slicedToArray2.default)(_useState, 2),
-    isOpen = _useState2[0],
-    setIsOpen = _useState2[1];
+    steps = _useState2[0],
+    setSteps = _useState2[1],
+    _useState3 = (0, _react.useState)(!!props.userProgress[IS_POPUP_MINIMIZED]),
+    _useState4 = (0, _slicedToArray2.default)(_useState3, 2),
+    isMinimized = _useState4[0],
+    setIsMinimized = _useState4[1];
+  var toggleIsMinimized = /*#__PURE__*/function () {
+    var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      var currState;
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            currState = isMinimized;
+            _context.prev = 1;
+            setIsMinimized(!currState);
+            _context.next = 5;
+            return (0, _functions.updateUserProgress)((0, _defineProperty2.default)({}, IS_POPUP_MINIMIZED, !currState));
+          case 5:
+            _context.next = 10;
+            break;
+          case 7:
+            _context.prev = 7;
+            _context.t0 = _context["catch"](1);
+            setIsMinimized(currState);
+          case 10:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee, null, [[1, 7]]);
+    }));
+    return function toggleIsMinimized() {
+      return _ref.apply(this, arguments);
+    };
+  }();
   (0, _react.useEffect)(function () {
-    elementor.on('elementor/editor/panel/whats-new/clicked', function () {
-      return setIsOpen(true);
-    });
-  }, []);
-  return /*#__PURE__*/_react.default.createElement(_whatsNew.WhatsNew, {
-    isOpen: isOpen,
-    setIsOpen: setIsOpen,
-    setIsRead: function setIsRead() {
-      return document.body.classList.remove('e-has-notification');
-    },
-    anchorPosition: anchorPosition
-  });
+    setSteps(props.steps);
+  }, [props.steps]);
+  return /*#__PURE__*/_react.default.createElement(_ui.Paper, {
+    elevation: 5,
+    sx: {
+      position: 'fixed',
+      width: '360px',
+      bottom: '40px',
+      insetInlineEnd: '40px',
+      zIndex: '99999',
+      hidden: true,
+      maxHeight: '645px',
+      overflowY: 'auto'
+    }
+  }, /*#__PURE__*/_react.default.createElement(_header.default, {
+    steps: steps,
+    isMinimized: isMinimized,
+    toggleIsMinimized: toggleIsMinimized
+  }), /*#__PURE__*/_react.default.createElement(_checklistWrapper.default, {
+    steps: steps,
+    setSteps: setSteps,
+    isMinimized: isMinimized
+  }));
 };
-exports.EditorDrawer = EditorDrawer;
-EditorDrawer.propTypes = {
-  anchorPosition: PropTypes.oneOf(['left', 'top', 'right', 'bottom'])
+Checklist.propTypes = {
+  steps: PropTypes.array.isRequired,
+  userProgress: PropTypes.object.isRequired
 };
+var _default = Checklist;
+exports["default"] = _default;
 
 /***/ }),
 
-/***/ "../modules/notifications/assets/js/components/editor-on-button-clicked.js":
-/*!*********************************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/editor-on-button-clicked.js ***!
-  \*********************************************************************************/
+/***/ "../modules/checklist/assets/js/app/components/header.js":
+/*!***************************************************************!*\
+  !*** ../modules/checklist/assets/js/app/components/header.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ "../node_modules/@babel/runtime/regenerator/index.js"));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "../node_modules/@babel/runtime/helpers/asyncToGenerator.js"));
+var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
+var _i18n = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+var _progress = _interopRequireDefault(__webpack_require__(/*! ./progress */ "../modules/checklist/assets/js/app/components/progress.js"));
+var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js"));
+var _query = __webpack_require__(/*! @elementor/query */ "../node_modules/@elementor/query/dist/index.js");
+var React = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
+var _functions = __webpack_require__(/*! ../../utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+var _consts = __webpack_require__(/*! ../../utils/consts */ "../modules/checklist/assets/js/utils/consts.js");
+var _icons = __webpack_require__(/*! @elementor/icons */ "@elementor/icons");
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var CHECKLIST_CLOSED_IN_THE_EDITOR_FOR_FIRST_TIME = _consts.USER_PROGRESS.CHECKLIST_CLOSED_IN_THE_EDITOR_FOR_FIRST_TIME;
+var CHECKLIST_HEADER_CLOSE = _consts.MIXPANEL_CHECKLIST_STEPS.CHECKLIST_HEADER_CLOSE;
+var Header = function Header(_ref) {
+  var steps = _ref.steps,
+    isMinimized = _ref.isMinimized,
+    toggleIsMinimized = _ref.toggleIsMinimized;
+  var _useQuery = (0, _query.useQuery)({
+      queryKey: ['closedForFirstTime'],
+      queryFn: _functions.fetchUserProgress
+    }),
+    userProgress = _useQuery.data,
+    closedForFirstTime = (userProgress === null || userProgress === void 0 ? void 0 : userProgress[CHECKLIST_CLOSED_IN_THE_EDITOR_FOR_FIRST_TIME]) || false;
+  var closeChecklist = /*#__PURE__*/function () {
+    var _ref2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            (0, _functions.addMixpanelTrackingChecklistHeader)(CHECKLIST_HEADER_CLOSE);
+            if (closedForFirstTime) {
+              _context.next = 5;
+              break;
+            }
+            _context.next = 4;
+            return (0, _functions.updateUserProgress)((0, _defineProperty2.default)({}, CHECKLIST_CLOSED_IN_THE_EDITOR_FOR_FIRST_TIME, true));
+          case 4:
+            window.dispatchEvent(new CustomEvent('elementor/checklist/first_close', {
+              detail: {
+                message: 'firstClose'
+              }
+            }));
+          case 5:
+            (0, _functions.toggleChecklistPopup)();
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function closeChecklist() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_ui.AppBar, {
+    elevation: 0,
+    position: "sticky",
+    sx: {
+      p: 2,
+      backgroundColor: 'background.default'
+    }
+  }, /*#__PURE__*/React.createElement(_ui.Toolbar, {
+    variant: "dense",
+    disableGutters: true
+  }, /*#__PURE__*/React.createElement(_ui.Typography, {
+    variant: "subtitle1",
+    sx: {
+      flexGrow: 1
+    }
+  }, (0, _i18n.__)('Let\'s make a productivity boost', 'elementor')), /*#__PURE__*/React.createElement(_ui.IconButton, {
+    size: "small",
+    onClick: toggleIsMinimized,
+    "aria-expanded": !isMinimized
+  }, isMinimized ? /*#__PURE__*/React.createElement(_icons.ExpandDiagonalIcon, null) : /*#__PURE__*/React.createElement(_icons.MinimizeDiagonalIcon, null)), /*#__PURE__*/React.createElement(_ui.CloseButton, {
+    sx: {
+      mr: -0.5
+    },
+    size: "small",
+    onClick: closeChecklist
+  })), /*#__PURE__*/React.createElement(_progress.default, {
+    steps: steps
+  })), /*#__PURE__*/React.createElement(_ui.Divider, null));
+};
+Header.propTypes = {
+  steps: _propTypes.default.array.isRequired,
+  isMinimized: _propTypes.default.bool.isRequired,
+  toggleIsMinimized: _propTypes.default.func.isRequired
+};
+var _default = Header;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/app/components/progress.js":
+/*!*****************************************************************!*\
+  !*** ../modules/checklist/assets/js/app/components/progress.js ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -205,68 +803,531 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.editorOnButtonClicked = void 0;
+exports["default"] = void 0;
 var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
-var _react2 = _interopRequireDefault(__webpack_require__(/*! elementor-utils/react */ "../assets/dev/js/utils/react.js"));
-var _editorDrawer = __webpack_require__(/*! ./editor-drawer */ "../modules/notifications/assets/js/components/editor-drawer.js");
-var isRendered = false;
-var editorOnButtonClicked = function editorOnButtonClicked() {
-  var anchorPosition = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'left';
-  if (!isRendered) {
-    isRendered = true;
-    var container = document.createElement('div');
-    document.body.append(container);
-    _react2.default.render( /*#__PURE__*/_react.default.createElement(_editorDrawer.EditorDrawer, {
-      anchorPosition: anchorPosition
-    }), container);
-    return;
-  }
-  elementor.trigger('elementor/editor/panel/whats-new/clicked');
+var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
+var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js"));
+var _functions = __webpack_require__(/*! ../../utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+var Progress = function Progress(_ref) {
+  var steps = _ref.steps;
+  var progress = steps.filter(_functions.isStepChecked).length * 100 / steps.length;
+  return /*#__PURE__*/_react.default.createElement(_ui.Box, {
+    sx: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 1
+    }
+  }, /*#__PURE__*/_react.default.createElement(_ui.Box, {
+    sx: {
+      width: '100%'
+    }
+  }, /*#__PURE__*/_react.default.createElement(_ui.LinearProgress, {
+    variant: "determinate",
+    value: progress
+  })), /*#__PURE__*/_react.default.createElement(_ui.Box, {
+    sx: {
+      width: 'fit-content'
+    }
+  }, /*#__PURE__*/_react.default.createElement(_ui.Typography, {
+    variant: "body2",
+    color: "text.secondary"
+  }, "".concat(Math.round(progress), "%"))));
 };
-exports.editorOnButtonClicked = editorOnButtonClicked;
+var _default = Progress;
+exports["default"] = _default;
+Progress.propTypes = {
+  steps: _propTypes.default.array.isRequired
+};
 
 /***/ }),
 
-/***/ "../modules/notifications/assets/js/components/editor-v1.js":
-/*!******************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/editor-v1.js ***!
-  \******************************************************************/
+/***/ "../modules/checklist/assets/js/app/components/reminder-modal.js":
+/*!***********************************************************************!*\
+  !*** ../modules/checklist/assets/js/app/components/reminder-modal.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
+var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
+var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js"));
+var ReminderModal = function ReminderModal(_ref) {
+  var setOpen = _ref.setOpen;
+  var closeChecklist = function closeChecklist(e) {
+    e.stopPropagation();
+    setOpen(false);
+  };
+  return /*#__PURE__*/_react.default.createElement(_ui.Card, {
+    elevation: 0,
+    sx: {
+      maxWidth: 336
+    },
+    className: "e-checklist-infotip-first-time-closed"
+  }, /*#__PURE__*/_react.default.createElement(_ui.CardContent, null, /*#__PURE__*/_react.default.createElement(_ui.Typography, {
+    variant: "subtitle2",
+    sx: {
+      mb: 2
+    }
+  }, "Looking for your Launchpad Checklist?"), /*#__PURE__*/_react.default.createElement(_ui.Typography, {
+    variant: "body2"
+  }, "Click the launch icon to continue setting up your site.")), /*#__PURE__*/_react.default.createElement(_ui.CardActions, null, /*#__PURE__*/_react.default.createElement(_ui.Button, {
+    size: "small",
+    variant: "contained",
+    className: "infotip-first-time-closed-button",
+    onClick: closeChecklist
+  }, "Got it")));
+};
+var _default = ReminderModal;
+exports["default"] = _default;
+ReminderModal.propTypes = {
+  setOpen: _propTypes.default.func.isRequired
+};
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/app/components/success-message.js":
+/*!************************************************************************!*\
+  !*** ../modules/checklist/assets/js/app/components/success-message.js ***!
+  \************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 /* provided dependency */ var __ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n")["__"];
 
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.editorV1 = void 0;
-var _editorOnButtonClicked = __webpack_require__(/*! ./editor-on-button-clicked */ "../modules/notifications/assets/js/components/editor-on-button-clicked.js");
-var editorV1 = function editorV1() {
-  elementor.on('panel:init', function () {
-    if (elementorNotifications.is_unread) {
-      document.body.classList.add('e-has-notification');
+exports["default"] = void 0;
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
+var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
+var _useAjax2 = _interopRequireDefault(__webpack_require__(/*! elementor-app/hooks/use-ajax */ "../app/assets/js/hooks/use-ajax.js"));
+var _functions = __webpack_require__(/*! ../../utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+var _consts = __webpack_require__(/*! ../../utils/consts */ "../modules/checklist/assets/js/utils/consts.js");
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var ACTION = _consts.MIXPANEL_CHECKLIST_STEPS.ACTION,
+  WELL_DONE = _consts.MIXPANEL_CHECKLIST_STEPS.WELL_DONE;
+var SuccessMessage = function SuccessMessage() {
+  var _useAjax = (0, _useAjax2.default)(),
+    ajaxState = _useAjax.ajaxState,
+    setAjax = _useAjax.setAjax;
+  var hideChecklist = function hideChecklist() {
+    (0, _functions.addMixpanelTrackingChecklistSteps)(WELL_DONE, ACTION);
+    setAjax({
+      data: {
+        action: 'elementor_ajax',
+        actions: JSON.stringify({
+          save_editorPreferences_settings: {
+            action: 'save_editorPreferences_settings',
+            data: {
+              data: {
+                show_launchpad_checklist: ''
+              }
+            }
+          }
+        })
+      }
+    });
+  };
+  (0, _react.useEffect)(function () {
+    switch (ajaxState.status) {
+      case 'success':
+        setTimeout(function () {
+          $e.commands.run('checklist/toggle-icon', false);
+        }, 0);
+        break;
+      case 'error':
+        break;
     }
-    elementor.getPanelView().getPages('menu').view.addItem({
-      name: 'notification-center',
-      icon: 'eicon-speakerphone',
-      title: __('What\'s New', 'elementor'),
-      callback: _editorOnButtonClicked.editorOnButtonClicked
-    }, 'navigate_from_page', 'view-page');
-  });
+  }, [ajaxState]);
+  return /*#__PURE__*/_react.default.createElement(_ui.Card, {
+    elevation: 0,
+    square: true,
+    className: "e-checklist-done"
+  }, /*#__PURE__*/_react.default.createElement(_ui.CardMedia, {
+    image: "https://assets.elementor.com/checklist/v1/images/checklist-step-7.jpg",
+    sx: {
+      height: 180
+    }
+  }), /*#__PURE__*/_react.default.createElement(_ui.CardContent, {
+    sx: {
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/_react.default.createElement(_ui.Typography, {
+    variant: "h6",
+    color: "text.primary"
+  }, __('You\'re on your way!', 'elementor')), /*#__PURE__*/_react.default.createElement(_ui.Typography, {
+    variant: "body2",
+    color: "text.secondary",
+    component: "p"
+  }, __('With these steps, you\'ve got a great base for a robust website. Enjoy your web creation journey!', 'elementor'))), /*#__PURE__*/_react.default.createElement(_ui.CardActions, {
+    sx: {
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/_react.default.createElement(_ui.Button, {
+    color: "primary",
+    size: "small",
+    variant: "contained",
+    onClick: hideChecklist
+  }, __('Got it', 'elementor'))));
 };
-exports.editorV1 = editorV1;
+var _default = SuccessMessage;
+exports["default"] = _default;
 
 /***/ }),
 
-/***/ "../modules/notifications/assets/js/components/editor-v2.js":
-/*!******************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/editor-v2.js ***!
-  \******************************************************************/
+/***/ "../modules/checklist/assets/js/commands-data/index.js":
+/*!*************************************************************!*\
+  !*** ../modules/checklist/assets/js/commands-data/index.js ***!
+  \*************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+Object.defineProperty(exports, "Steps", ({
+  enumerable: true,
+  get: function get() {
+    return _steps.Steps;
+  }
+}));
+Object.defineProperty(exports, "UserProgress", ({
+  enumerable: true,
+  get: function get() {
+    return _userProgress.UserProgress;
+  }
+}));
+var _steps = __webpack_require__(/*! ./steps */ "../modules/checklist/assets/js/commands-data/steps.js");
+var _userProgress = __webpack_require__(/*! ./user-progress */ "../modules/checklist/assets/js/commands-data/user-progress.js");
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/commands-data/steps.js":
+/*!*************************************************************!*\
+  !*** ../modules/checklist/assets/js/commands-data/steps.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = exports.Steps = void 0;
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ "../node_modules/@babel/runtime/helpers/inherits.js"));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js"));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "../node_modules/@babel/runtime/helpers/getPrototypeOf.js"));
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+var Steps = /*#__PURE__*/function (_$e$modules$CommandDa) {
+  (0, _inherits2.default)(Steps, _$e$modules$CommandDa);
+  var _super = _createSuper(Steps);
+  function Steps() {
+    (0, _classCallCheck2.default)(this, Steps);
+    return _super.apply(this, arguments);
+  }
+  (0, _createClass2.default)(Steps, null, [{
+    key: "getEndpointFormat",
+    value: function getEndpointFormat() {
+      return 'checklist/steps/{id}';
+    }
+  }]);
+  return Steps;
+}($e.modules.CommandData);
+exports.Steps = Steps;
+var _default = Steps;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/commands-data/user-progress.js":
+/*!*********************************************************************!*\
+  !*** ../modules/checklist/assets/js/commands-data/user-progress.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = exports.UserProgress = void 0;
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ "../node_modules/@babel/runtime/helpers/inherits.js"));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js"));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "../node_modules/@babel/runtime/helpers/getPrototypeOf.js"));
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+var UserProgress = /*#__PURE__*/function (_$e$modules$CommandDa) {
+  (0, _inherits2.default)(UserProgress, _$e$modules$CommandDa);
+  var _super = _createSuper(UserProgress);
+  function UserProgress() {
+    (0, _classCallCheck2.default)(this, UserProgress);
+    return _super.apply(this, arguments);
+  }
+  (0, _createClass2.default)(UserProgress, null, [{
+    key: "getEndpointFormat",
+    value: function getEndpointFormat() {
+      return 'checklist/user-progress';
+    }
+  }]);
+  return UserProgress;
+}($e.modules.CommandData);
+exports.UserProgress = UserProgress;
+var _default = UserProgress;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/commands/index.js":
+/*!********************************************************!*\
+  !*** ../modules/checklist/assets/js/commands/index.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+Object.defineProperty(exports, "ToggleIcon", ({
+  enumerable: true,
+  get: function get() {
+    return _toggleIcon.ToggleIcon;
+  }
+}));
+Object.defineProperty(exports, "TogglePopup", ({
+  enumerable: true,
+  get: function get() {
+    return _togglePopup.TogglePopup;
+  }
+}));
+var _togglePopup = __webpack_require__(/*! ./toggle-popup */ "../modules/checklist/assets/js/commands/toggle-popup.js");
+var _toggleIcon = __webpack_require__(/*! ./toggle-icon */ "../modules/checklist/assets/js/commands/toggle-icon.js");
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/commands/toggle-icon.js":
+/*!**************************************************************!*\
+  !*** ../modules/checklist/assets/js/commands/toggle-icon.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = exports.ToggleIcon = void 0;
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ "../node_modules/@babel/runtime/helpers/inherits.js"));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js"));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "../node_modules/@babel/runtime/helpers/getPrototypeOf.js"));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _togglePopup = _interopRequireDefault(__webpack_require__(/*! ./toggle-popup */ "../modules/checklist/assets/js/commands/toggle-popup.js"));
+var _functions = __webpack_require__(/*! ../utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+var ToggleIcon = /*#__PURE__*/function (_$e$modules$CommandBa) {
+  (0, _inherits2.default)(ToggleIcon, _$e$modules$CommandBa);
+  var _super = _createSuper(ToggleIcon);
+  function ToggleIcon() {
+    (0, _classCallCheck2.default)(this, ToggleIcon);
+    return _super.apply(this, arguments);
+  }
+  (0, _createClass2.default)(ToggleIcon, [{
+    key: "apply",
+    value: function apply(shouldShow) {
+      document.body.querySelector('[aria-label="Checklist"]').parentElement.style.display = shouldShow ? 'block' : 'none';
+      if (!shouldShow && _togglePopup.default.isOpen) {
+        (0, _functions.toggleChecklistPopup)();
+      }
+    }
+  }]);
+  return ToggleIcon;
+}($e.modules.CommandBase);
+exports.ToggleIcon = ToggleIcon;
+(0, _defineProperty2.default)(ToggleIcon, "isSettingsOn", true);
+var _default = ToggleIcon;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/commands/toggle-popup.js":
+/*!***************************************************************!*\
+  !*** ../modules/checklist/assets/js/commands/toggle-popup.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = exports.TogglePopup = void 0;
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ "../node_modules/@babel/runtime/helpers/inherits.js"));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js"));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "../node_modules/@babel/runtime/helpers/getPrototypeOf.js"));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _app = _interopRequireDefault(__webpack_require__(/*! ../app/app */ "../modules/checklist/assets/js/app/app.js"));
+var _query = __webpack_require__(/*! @elementor/query */ "../node_modules/@elementor/query/dist/index.js");
+var _client = _interopRequireDefault(__webpack_require__(/*! react-dom/client */ "../node_modules/react-dom/client.js"));
+var _functions = __webpack_require__(/*! ../utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+var _consts = __webpack_require__(/*! ../utils/consts */ "../modules/checklist/assets/js/utils/consts.js");
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+var queryClient = new _query.QueryClient();
+var TogglePopup = /*#__PURE__*/function (_$e$modules$CommandBa) {
+  (0, _inherits2.default)(TogglePopup, _$e$modules$CommandBa);
+  var _super = _createSuper(TogglePopup);
+  function TogglePopup() {
+    (0, _classCallCheck2.default)(this, TogglePopup);
+    return _super.apply(this, arguments);
+  }
+  (0, _createClass2.default)(TogglePopup, [{
+    key: "apply",
+    value: function apply(args) {
+      if (!TogglePopup.isOpen) {
+        this.mount();
+      } else {
+        this.unmount();
+        (0, _functions.updateUserProgress)((0, _defineProperty2.default)({}, _consts.USER_PROGRESS.EDITOR_VISIT_COUNT, -1));
+      }
+      TogglePopup.isOpen = !TogglePopup.isOpen;
+      args.isOpen = TogglePopup.isOpen;
+    }
+  }, {
+    key: "mount",
+    value: function mount() {
+      this.setRootElement();
+      TogglePopup.rootElement.render( /*#__PURE__*/_react.default.createElement(_query.QueryClientProvider, {
+        client: queryClient
+      }, /*#__PURE__*/_react.default.createElement(_app.default, null)));
+    }
+  }, {
+    key: "unmount",
+    value: function unmount() {
+      TogglePopup.rootElement.unmount();
+      document.body.removeChild(document.body.querySelector('#e-checklist'));
+    }
+  }, {
+    key: "setRootElement",
+    value: function setRootElement() {
+      var root = document.body.querySelector('#e-checklist');
+      if (!root) {
+        root = document.createElement('div');
+        root.id = 'e-checklist';
+        document.body.appendChild(root);
+      }
+      TogglePopup.rootElement = _client.default.createRoot(root);
+    }
+  }]);
+  return TogglePopup;
+}($e.modules.CommandBase);
+exports.TogglePopup = TogglePopup;
+(0, _defineProperty2.default)(TogglePopup, "rootElement", null);
+(0, _defineProperty2.default)(TogglePopup, "isOpen", false);
+var _default = TogglePopup;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/component.js":
+/*!***************************************************!*\
+  !*** ../modules/checklist/assets/js/component.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ "../node_modules/@babel/runtime/helpers/inherits.js"));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js"));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "../node_modules/@babel/runtime/helpers/getPrototypeOf.js"));
+var commands = _interopRequireWildcard(__webpack_require__(/*! ./commands/ */ "../modules/checklist/assets/js/commands/index.js"));
+var commandsData = _interopRequireWildcard(__webpack_require__(/*! ./commands-data/ */ "../modules/checklist/assets/js/commands-data/index.js"));
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+var Component = /*#__PURE__*/function (_$e$modules$Component) {
+  (0, _inherits2.default)(Component, _$e$modules$Component);
+  var _super = _createSuper(Component);
+  function Component() {
+    (0, _classCallCheck2.default)(this, Component);
+    return _super.apply(this, arguments);
+  }
+  (0, _createClass2.default)(Component, [{
+    key: "getNamespace",
+    value: function getNamespace() {
+      return 'checklist';
+    }
+  }, {
+    key: "defaultCommands",
+    value: function defaultCommands() {
+      return this.importCommands(commands);
+    }
+  }, {
+    key: "defaultData",
+    value: function defaultData() {
+      return this.importCommands(commandsData);
+    }
+  }], [{
+    key: "getEndpointFormat",
+    value: function getEndpointFormat() {
+      return 'checklist';
+    }
+  }]);
+  return Component;
+}($e.modules.ComponentBase);
+exports["default"] = Component;
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/editor-v-2.js":
+/*!****************************************************!*\
+  !*** ../modules/checklist/assets/js/editor-v-2.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
 
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
@@ -275,52 +1336,32 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.editorV2 = void 0;
-var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
-var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "../node_modules/@babel/runtime/helpers/slicedToArray.js"));
-var _editorOnButtonClicked = __webpack_require__(/*! ./editor-on-button-clicked */ "../modules/notifications/assets/js/components/editor-on-button-clicked.js");
-var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
+var EditorAppBar = _interopRequireWildcard(__webpack_require__(/*! @elementor/editor-app-bar */ "@elementor/editor-app-bar"));
 var _i18n = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-var _SpeakerphoneIcon = _interopRequireDefault(__webpack_require__(/*! @elementor/icons/SpeakerphoneIcon */ "@elementor/icons/SpeakerphoneIcon"));
+var React = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
+var _topbarIcon = _interopRequireDefault(__webpack_require__(/*! ./topbar-icon */ "../modules/checklist/assets/js/topbar-icon.js"));
+var _functions = __webpack_require__(/*! ./utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+var _query = __webpack_require__(/*! @elementor/query */ "../node_modules/@elementor/query/dist/index.js");
+var _commands = __webpack_require__(/*! ./commands */ "../modules/checklist/assets/js/commands/index.js");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-var IconWithBadge = function IconWithBadge(_ref) {
-  var invisible = _ref.invisible;
-  return /*#__PURE__*/_react.default.createElement(_ui.Badge, {
-    color: "primary",
-    variant: "dot",
-    invisible: invisible
-  }, /*#__PURE__*/_react.default.createElement(_SpeakerphoneIcon.default, null));
-};
-IconWithBadge.propTypes = {
-  invisible: PropTypes.bool
-};
+var queryClient = new _query.QueryClient();
 var editorV2 = function editorV2() {
-  var utilitiesMenu = window.elementorV2.editorAppBar.utilitiesMenu;
+  var utilitiesMenu = EditorAppBar.utilitiesMenu;
   utilitiesMenu.registerLink({
-    id: 'app-bar-menu-item-whats-new',
-    priority: 10,
+    id: 'app-bar-menu-item-checklist',
+    priority: 5,
     useProps: function useProps() {
-      var _useState = (0, _react.useState)(!elementorNotifications.is_unread),
-        _useState2 = (0, _slicedToArray2.default)(_useState, 2),
-        isRead = _useState2[0],
-        setIsRead = _useState2[1];
       return {
-        title: (0, _i18n.__)("What's New", 'elementor'),
+        title: (0, _i18n.__)('Checklist', 'elementor'),
         icon: function icon() {
-          return /*#__PURE__*/_react.default.createElement(IconWithBadge, {
-            invisible: isRead
-          });
+          return /*#__PURE__*/React.createElement(_query.QueryClientProvider, {
+            client: queryClient
+          }, /*#__PURE__*/React.createElement(_topbarIcon.default, null));
         },
         onClick: function onClick() {
-          elementor.editorEvents.dispatchEvent(elementor.editorEvents.config.names.topBar.whatsNew, {
-            location: elementor.editorEvents.config.locations.topBar,
-            secondaryLocation: elementor.editorEvents.config.secondaryLocations['whats-new'],
-            trigger: elementor.editorEvents.config.triggers.click,
-            element: elementor.editorEvents.config.elements.buttonIcon
-          });
-          setIsRead(true);
-          elementorNotifications.is_unread = false;
-          (0, _editorOnButtonClicked.editorOnButtonClicked)('right');
+          (0, _functions.addMixpanelTrackingChecklistTopBar)(_commands.TogglePopup.isOpen);
+          (0, _functions.toggleChecklistPopup)();
         }
       };
     }
@@ -330,517 +1371,322 @@ exports.editorV2 = editorV2;
 
 /***/ }),
 
-/***/ "../modules/notifications/assets/js/components/whats-new-drawer-content.js":
-/*!*********************************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/whats-new-drawer-content.js ***!
-  \*********************************************************************************/
+/***/ "../modules/checklist/assets/js/topbar-icon.js":
+/*!*****************************************************!*\
+  !*** ../modules/checklist/assets/js/topbar-icon.js ***!
+  \*****************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
 
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.WhatsNewDrawerContent = void 0;
-var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
+exports["default"] = void 0;
+var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "../node_modules/@babel/runtime/helpers/slicedToArray.js"));
+var React = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
 var _query = __webpack_require__(/*! @elementor/query */ "../node_modules/@elementor/query/dist/index.js");
-var _api = __webpack_require__(/*! ../api */ "../modules/notifications/assets/js/api/index.js");
+var _editorV1Adapters = __webpack_require__(/*! @elementor/editor-v1-adapters */ "@elementor/editor-v1-adapters");
+var _RocketIcon = _interopRequireDefault(__webpack_require__(/*! @elementor/icons/RocketIcon */ "@elementor/icons/RocketIcon"));
 var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
-var _whatsNewItem = __webpack_require__(/*! ./whats-new-item */ "../modules/notifications/assets/js/components/whats-new-item.js");
-var WhatsNewDrawerContent = function WhatsNewDrawerContent(_ref) {
-  var setIsOpen = _ref.setIsOpen;
-  var _useQuery = (0, _query.useQuery)({
-      queryKey: ['e-notifications'],
-      queryFn: _api.getNotifications
+var _reminderModal = _interopRequireDefault(__webpack_require__(/*! ./app/components/reminder-modal */ "../modules/checklist/assets/js/app/components/reminder-modal.js"));
+var _consts = __webpack_require__(/*! ./utils/consts */ "../modules/checklist/assets/js/utils/consts.js");
+var _functions = __webpack_require__(/*! ./utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var CHECKLIST_CLOSED_IN_THE_EDITOR_FOR_FIRST_TIME = _consts.USER_PROGRESS.CHECKLIST_CLOSED_IN_THE_EDITOR_FOR_FIRST_TIME;
+var TopBarIcon = function TopBarIcon() {
+  var _useState = (0, React.useState)(false),
+    _useState2 = (0, _slicedToArray2.default)(_useState, 2),
+    hasRoot = _useState2[0],
+    setHasRoot = _useState2[1],
+    _useState3 = (0, React.useState)(false),
+    _useState4 = (0, _slicedToArray2.default)(_useState3, 2),
+    open = _useState4[0],
+    setOpen = _useState4[1],
+    _useQuery = (0, _query.useQuery)({
+      queryKey: ['closedForFirstTime'],
+      queryFn: _functions.fetchUserProgress
     }),
-    isPending = _useQuery.isPending,
     error = _useQuery.error,
-    items = _useQuery.data;
-  if (isPending) {
-    return /*#__PURE__*/_react.default.createElement(_ui.Box, null, /*#__PURE__*/_react.default.createElement(_ui.LinearProgress, {
-      color: "secondary"
-    }));
-  }
+    userProgress = _useQuery.data,
+    closedForFirstTime = userProgress === null || userProgress === void 0 ? void 0 : userProgress[CHECKLIST_CLOSED_IN_THE_EDITOR_FOR_FIRST_TIME];
+  (0, React.useEffect)(function () {
+    return (0, _editorV1Adapters.__privateListenTo)((0, _editorV1Adapters.commandEndEvent)('checklist/toggle-popup'), function (e) {
+      setHasRoot(e.args.isOpen);
+    });
+  }, [hasRoot]);
+  (0, React.useEffect)(function () {
+    var handleFirstClosed = function handleFirstClosed() {
+      setOpen(true);
+    };
+    window.addEventListener('elementor/checklist/first_close', handleFirstClosed);
+    return function () {
+      window.removeEventListener('elementor/checklist/first_close', handleFirstClosed);
+    };
+  }, []);
   if (error) {
-    return /*#__PURE__*/_react.default.createElement(_ui.Box, null, "An error has occurred: ", error);
-  }
-  return items.map(function (item, itemIndex) {
-    return /*#__PURE__*/_react.default.createElement(_whatsNewItem.WhatsNewItem, {
-      key: itemIndex,
-      item: item,
-      itemIndex: itemIndex,
-      itemsLength: items.length,
-      setIsOpen: setIsOpen
-    });
-  });
-};
-exports.WhatsNewDrawerContent = WhatsNewDrawerContent;
-WhatsNewDrawerContent.propTypes = {
-  setIsOpen: PropTypes.func.isRequired
-};
-
-/***/ }),
-
-/***/ "../modules/notifications/assets/js/components/whats-new-item-chips.js":
-/*!*****************************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/whats-new-item-chips.js ***!
-  \*****************************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports.WhatsNewItemChips = void 0;
-var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
-var _extends2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/extends */ "../node_modules/@babel/runtime/helpers/extends.js"));
-var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
-var WhatsNewItemChips = function WhatsNewItemChips(_ref) {
-  var chipPlan = _ref.chipPlan,
-    chipTags = _ref.chipTags,
-    itemIndex = _ref.itemIndex;
-  var chips = [];
-  if (chipPlan) {
-    chips.push({
-      color: 'promotion',
-      size: 'small',
-      label: chipPlan
-    });
-  }
-  if (chipTags) {
-    chipTags.forEach(function (chipTag) {
-      chips.push({
-        variant: 'outlined',
-        size: 'small',
-        label: chipTag
-      });
-    });
-  }
-  if (!chips.length) {
     return null;
   }
-  return /*#__PURE__*/_react.default.createElement(_ui.Stack, {
-    direction: "row",
-    flexWrap: "wrap",
-    gap: 1,
-    sx: {
-      pb: 1
-    }
-  }, chips.map(function (chip, chipIndex) {
-    return /*#__PURE__*/_react.default.createElement(_ui.Chip, (0, _extends2.default)({
-      key: "chip-".concat(itemIndex).concat(chipIndex)
-    }, chip));
-  }));
-};
-exports.WhatsNewItemChips = WhatsNewItemChips;
-WhatsNewItemChips.propTypes = {
-  chipPlan: PropTypes.string,
-  chipTags: PropTypes.array,
-  itemIndex: PropTypes.number.isRequired
-};
-
-/***/ }),
-
-/***/ "../modules/notifications/assets/js/components/whats-new-item-thumbnail.js":
-/*!*********************************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/whats-new-item-thumbnail.js ***!
-  \*********************************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports.WhatsNewItemThumbnail = void 0;
-var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
-var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
-var _wrapperWithLink = __webpack_require__(/*! ./wrapper-with-link */ "../modules/notifications/assets/js/components/wrapper-with-link.js");
-var WhatsNewItemThumbnail = function WhatsNewItemThumbnail(_ref) {
-  var imageSrc = _ref.imageSrc,
-    title = _ref.title,
-    link = _ref.link;
-  return /*#__PURE__*/_react.default.createElement(_ui.Box, {
-    sx: {
-      pb: 2
-    }
-  }, /*#__PURE__*/_react.default.createElement(_wrapperWithLink.WrapperWithLink, {
-    link: link
-  }, /*#__PURE__*/_react.default.createElement("img", {
-    src: imageSrc,
-    alt: title,
-    style: {
-      maxWidth: '100%'
-    }
-  })));
-};
-exports.WhatsNewItemThumbnail = WhatsNewItemThumbnail;
-WhatsNewItemThumbnail.propTypes = {
-  imageSrc: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  link: PropTypes.string
-};
-
-/***/ }),
-
-/***/ "../modules/notifications/assets/js/components/whats-new-item-topic-line.js":
-/*!**********************************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/whats-new-item-topic-line.js ***!
-  \**********************************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports.WhatsNewItemTopicLine = void 0;
-var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
-var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
-var WhatsNewItemTopicLine = function WhatsNewItemTopicLine(_ref) {
-  var topic = _ref.topic,
-    date = _ref.date;
-  return /*#__PURE__*/_react.default.createElement(_ui.Stack, {
-    direction: "row",
-    divider: /*#__PURE__*/_react.default.createElement(_ui.Divider, {
-      orientation: "vertical",
-      flexItem: true
+  return hasRoot && !closedForFirstTime ? /*#__PURE__*/React.createElement(_RocketIcon.default, null) : /*#__PURE__*/React.createElement(_ui.Infotip, {
+    placement: "bottom-start",
+    content: /*#__PURE__*/React.createElement(_reminderModal.default, {
+      setHasRoot: setHasRoot,
+      setOpen: setOpen
     }),
-    spacing: 1,
-    color: "text.tertiary",
-    sx: {
-      pb: 1
+    open: open,
+    PopperProps: {
+      modifiers: [{
+        name: 'offset',
+        options: {
+          offset: [-16, 12]
+        }
+      }]
     }
-  }, topic && /*#__PURE__*/_react.default.createElement(_ui.Box, null, topic), date && /*#__PURE__*/_react.default.createElement(_ui.Box, null, date));
+  }, /*#__PURE__*/React.createElement(_RocketIcon.default, null));
 };
-exports.WhatsNewItemTopicLine = WhatsNewItemTopicLine;
-WhatsNewItemTopicLine.propTypes = {
-  topic: PropTypes.string,
-  date: PropTypes.string
-};
+var _default = TopBarIcon;
+exports["default"] = _default;
 
 /***/ }),
 
-/***/ "../modules/notifications/assets/js/components/whats-new-item.js":
-/*!***********************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/whats-new-item.js ***!
-  \***********************************************************************/
+/***/ "../modules/checklist/assets/js/utils/consts.js":
+/*!******************************************************!*\
+  !*** ../modules/checklist/assets/js/utils/consts.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.USER_PROGRESS_ROUTE = exports.USER_PROGRESS = exports.STEP_IDS_TO_COMPLETE_IN_EDITOR = exports.STEPS_ROUTE = exports.STEP = exports.PANEL_ROUTES = exports.MIXPANEL_CHECKLIST_STEPS = void 0;
+var STEPS_ROUTE = 'checklist/steps',
+  USER_PROGRESS_ROUTE = 'checklist/user-progress';
+exports.USER_PROGRESS_ROUTE = USER_PROGRESS_ROUTE;
+exports.STEPS_ROUTE = STEPS_ROUTE;
+var STEP = {
+  IS_MARKED_COMPLETED: 'is_marked_completed',
+  IS_IMMUTABLE_COMPLETED: 'is_immutable_completed',
+  IS_ABSOLUTE_COMPLETED: 'is_absolute_completed',
+  PROMOTION_DATA: 'promotion_data'
+};
+exports.STEP = STEP;
+var USER_PROGRESS = {
+  CHECKLIST_CLOSED_IN_THE_EDITOR_FOR_FIRST_TIME: 'first_closed_checklist_in_editor',
+  IS_POPUP_MINIMIZED: 'is_popup_minimized',
+  EDITOR_VISIT_COUNT: 'editor_visit_count'
+};
+exports.USER_PROGRESS = USER_PROGRESS;
+var STEP_IDS_TO_COMPLETE_IN_EDITOR = ['add_logo', 'set_fonts_and_colors'];
+exports.STEP_IDS_TO_COMPLETE_IN_EDITOR = STEP_IDS_TO_COMPLETE_IN_EDITOR;
+var PANEL_ROUTES = {
+  add_logo: 'panel/global/settings-site-identity',
+  set_fonts_and_colors: 'panel/global/global-typography'
+};
+exports.PANEL_ROUTES = PANEL_ROUTES;
+var MIXPANEL_CHECKLIST_STEPS = {
+  UPGRADE: 'upgrade',
+  ACTION: 'action',
+  DONE: 'done',
+  UNDONE: 'undone',
+  TITLE: 'title',
+  WELL_DONE: 'well_done',
+  CHECKLIST_HEADER_CLOSE: 'checklistHeaderClose',
+  ACCORDION_SECTION: 'accordionSection'
+};
+exports.MIXPANEL_CHECKLIST_STEPS = MIXPANEL_CHECKLIST_STEPS;
+
+/***/ }),
+
+/***/ "../modules/checklist/assets/js/utils/functions.js":
+/*!*********************************************************!*\
+  !*** ../modules/checklist/assets/js/utils/functions.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
 
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.WhatsNewItem = void 0;
-var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
-var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
-var _whatsNewItemTopicLine = __webpack_require__(/*! ./whats-new-item-topic-line */ "../modules/notifications/assets/js/components/whats-new-item-topic-line.js");
-var _wrapperWithLink = __webpack_require__(/*! ./wrapper-with-link */ "../modules/notifications/assets/js/components/wrapper-with-link.js");
-var _whatsNewItemThumbnail = __webpack_require__(/*! ./whats-new-item-thumbnail */ "../modules/notifications/assets/js/components/whats-new-item-thumbnail.js");
-var _whatsNewItemChips = __webpack_require__(/*! ./whats-new-item-chips */ "../modules/notifications/assets/js/components/whats-new-item-chips.js");
-var WhatsNewItem = function WhatsNewItem(_ref) {
-  var item = _ref.item,
-    itemIndex = _ref.itemIndex,
-    itemsLength = _ref.itemsLength,
-    setIsOpen = _ref.setIsOpen;
-  return /*#__PURE__*/_react.default.createElement(_ui.Box, {
-    key: itemIndex,
-    display: "flex",
-    flexDirection: "column",
-    sx: {
-      pt: 2
-    }
-  }, (item.topic || item.date) && /*#__PURE__*/_react.default.createElement(_whatsNewItemTopicLine.WhatsNewItemTopicLine, {
-    topic: item.topic,
-    date: item.date
-  }), /*#__PURE__*/_react.default.createElement(_wrapperWithLink.WrapperWithLink, {
-    link: item.link
-  }, /*#__PURE__*/_react.default.createElement(_ui.Typography, {
-    variant: "subtitle1",
-    sx: {
-      pb: 2
-    }
-  }, item.title)), item.imageSrc && /*#__PURE__*/_react.default.createElement(_whatsNewItemThumbnail.WhatsNewItemThumbnail, {
-    imageSrc: item.imageSrc,
-    link: item.link,
-    title: item.title
-  }), /*#__PURE__*/_react.default.createElement(_whatsNewItemChips.WhatsNewItemChips, {
-    chipPlan: item.chipPlan,
-    chipTags: item.chipTags,
-    itemIndex: itemIndex
-  }), item.description && /*#__PURE__*/_react.default.createElement(_ui.Typography, {
-    variant: "body2",
-    color: "text.secondary",
-    sx: {
-      pb: 2
-    }
-  }, item.description, item.readMoreText && /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, ' ', /*#__PURE__*/_react.default.createElement(_ui.Link, {
-    href: item.link,
-    color: "info.main",
-    target: "_blank"
-  }, item.readMoreText))), item.cta && item.ctaLink && /*#__PURE__*/_react.default.createElement(_ui.Box, {
-    sx: {
-      pb: 2
-    }
-  }, /*#__PURE__*/_react.default.createElement(_ui.Button, {
-    href: item.ctaLink,
-    target: item.ctaLink.startsWith('#') ? '_self' : '_blank',
-    variant: "contained",
-    size: "small",
-    color: "promotion",
-    onClick: item.ctaLink.startsWith('#') ? function () {
-      return setIsOpen(false);
-    } : function () {}
-  }, item.cta)), itemIndex !== itemsLength - 1 && /*#__PURE__*/_react.default.createElement(_ui.Divider, {
-    sx: {
-      my: 1
-    }
-  }));
-};
-exports.WhatsNewItem = WhatsNewItem;
-WhatsNewItem.propTypes = {
-  item: PropTypes.object.isRequired,
-  itemIndex: PropTypes.number.isRequired,
-  itemsLength: PropTypes.number.isRequired,
-  setIsOpen: PropTypes.func.isRequired
-};
-
-/***/ }),
-
-/***/ "../modules/notifications/assets/js/components/whats-new-top-bar.js":
-/*!**************************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/whats-new-top-bar.js ***!
-  \**************************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports.WhatsNewTopBar = void 0;
-var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
-var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
-var _i18n = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-var _xIcon = __webpack_require__(/*! ../icons/x-icon */ "../modules/notifications/assets/js/icons/x-icon.js");
-var WhatsNewTopBar = function WhatsNewTopBar(props) {
-  var setIsOpen = props.setIsOpen;
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_ui.AppBar, {
-    elevation: 0,
-    position: "sticky",
-    sx: {
-      backgroundColor: 'background.default'
-    }
-  }, /*#__PURE__*/_react.default.createElement(_ui.Toolbar, {
-    variant: "dense"
-  }, /*#__PURE__*/_react.default.createElement(_ui.Typography, {
-    variant: "overline",
-    sx: {
-      flexGrow: 1
-    }
-  }, (0, _i18n.__)('What\'s New', 'elementor')), /*#__PURE__*/_react.default.createElement(_ui.IconButton, {
-    "aria-label": 'close',
-    size: "small",
-    onClick: function onClick() {
-      return setIsOpen(false);
-    }
-  }, /*#__PURE__*/_react.default.createElement(_xIcon.XIcon, null)))), /*#__PURE__*/_react.default.createElement(_ui.Divider, null));
-};
-exports.WhatsNewTopBar = WhatsNewTopBar;
-WhatsNewTopBar.propTypes = {
-  setIsOpen: PropTypes.func.isRequired
-};
-
-/***/ }),
-
-/***/ "../modules/notifications/assets/js/components/whats-new.js":
-/*!******************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/whats-new.js ***!
-  \******************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
-
-
-var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports.WhatsNew = void 0;
-var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
-var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
-var _query = __webpack_require__(/*! @elementor/query */ "../node_modules/@elementor/query/dist/index.js");
-var _whatsNewTopBar = __webpack_require__(/*! ./whats-new-top-bar */ "../modules/notifications/assets/js/components/whats-new-top-bar.js");
-var _whatsNewDrawerContent = __webpack_require__(/*! ./whats-new-drawer-content */ "../modules/notifications/assets/js/components/whats-new-drawer-content.js");
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-var queryClient = new _query.QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: false,
-      staleTime: 1000 * 60 * 30 // 30 minutes
-    }
-  }
-});
-
-var WhatsNew = function WhatsNew(props) {
-  var _window$elementor, _window$elementor$get;
-  var isOpen = props.isOpen,
-    setIsOpen = props.setIsOpen,
-    setIsRead = props.setIsRead,
-    _props$anchorPosition = props.anchorPosition,
-    anchorPosition = _props$anchorPosition === void 0 ? 'right' : _props$anchorPosition;
-  (0, _react.useEffect)(function () {
-    if (!isOpen) {
-      return;
-    }
-    setIsRead(true);
-  }, [isOpen, setIsRead]);
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_query.QueryClientProvider, {
-    client: queryClient
-  }, /*#__PURE__*/_react.default.createElement(_ui.DirectionProvider, {
-    rtl: elementorCommon.config.isRTL
-  }, /*#__PURE__*/_react.default.createElement(_ui.ThemeProvider, {
-    colorScheme: ((_window$elementor = window.elementor) === null || _window$elementor === void 0 ? void 0 : (_window$elementor$get = _window$elementor.getPreferences) === null || _window$elementor$get === void 0 ? void 0 : _window$elementor$get.call(_window$elementor, 'ui_theme')) || 'auto'
-  }, /*#__PURE__*/_react.default.createElement(_ui.Drawer, {
-    anchor: anchorPosition,
-    open: isOpen,
-    onClose: function onClose() {
-      return setIsOpen(false);
-    },
-    ModalProps: {
-      style: {
-        // Above the WordPress Admin Top Bar.
-        zIndex: 999999
+exports.addMixpanelTrackingChecklistHeader = addMixpanelTrackingChecklistHeader;
+exports.addMixpanelTrackingChecklistSteps = addMixpanelTrackingChecklistSteps;
+exports.addMixpanelTrackingChecklistTopBar = addMixpanelTrackingChecklistTopBar;
+exports.fetchSteps = fetchSteps;
+exports.fetchUserProgress = fetchUserProgress;
+exports.getAndUpdateStep = getAndUpdateStep;
+exports.getDocumentMetaDataMixpanel = getDocumentMetaDataMixpanel;
+exports.isStepChecked = isStepChecked;
+exports.toggleChecklistPopup = toggleChecklistPopup;
+exports.updateStep = updateStep;
+exports.updateUserProgress = updateUserProgress;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ "../node_modules/@babel/runtime/regenerator/index.js"));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "../node_modules/@babel/runtime/helpers/defineProperty.js"));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "../node_modules/@babel/runtime/helpers/asyncToGenerator.js"));
+var _consts = __webpack_require__(/*! ./consts */ "../modules/checklist/assets/js/utils/consts.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+var IS_MARKED_COMPLETED = _consts.STEP.IS_MARKED_COMPLETED,
+  IS_ABSOLUTE_COMPLETED = _consts.STEP.IS_ABSOLUTE_COMPLETED,
+  IS_IMMUTABLE_COMPLETED = _consts.STEP.IS_IMMUTABLE_COMPLETED,
+  PROMOTION_DATA = _consts.STEP.PROMOTION_DATA;
+function isStepChecked(step) {
+  return !step[PROMOTION_DATA] && (step[IS_MARKED_COMPLETED] || step[IS_ABSOLUTE_COMPLETED] || step[IS_IMMUTABLE_COMPLETED]);
+}
+function toggleChecklistPopup() {
+  $e.run('checklist/toggle-popup');
+}
+function fetchSteps() {
+  return _fetchSteps.apply(this, arguments);
+}
+function _fetchSteps() {
+  _fetchSteps = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+    var _response$data;
+    var response;
+    return _regenerator.default.wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return $e.data.get(_consts.STEPS_ROUTE, {}, {
+            refresh: true
+          });
+        case 2:
+          response = _context.sent;
+          return _context.abrupt("return", (response === null || response === void 0 ? void 0 : (_response$data = response.data) === null || _response$data === void 0 ? void 0 : _response$data.data) || null);
+        case 4:
+        case "end":
+          return _context.stop();
       }
-    }
-  }, /*#__PURE__*/_react.default.createElement(_ui.Box, {
-    sx: {
-      width: 320,
-      backgroundColor: 'background.default'
-    },
-    role: "presentation"
-  }, /*#__PURE__*/_react.default.createElement(_whatsNewTopBar.WhatsNewTopBar, {
-    setIsOpen: setIsOpen
-  }), /*#__PURE__*/_react.default.createElement(_ui.Box, {
-    sx: {
-      padding: '16px'
-    }
-  }, /*#__PURE__*/_react.default.createElement(_whatsNewDrawerContent.WhatsNewDrawerContent, {
-    setIsOpen: setIsOpen
-  }))))))));
-};
-exports.WhatsNew = WhatsNew;
-WhatsNew.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  setIsOpen: PropTypes.func.isRequired,
-  setIsRead: PropTypes.func.isRequired,
-  anchorPosition: PropTypes.oneOf(['left', 'top', 'right', 'bottom'])
-};
-
-/***/ }),
-
-/***/ "../modules/notifications/assets/js/components/wrapper-with-link.js":
-/*!**************************************************************************!*\
-  !*** ../modules/notifications/assets/js/components/wrapper-with-link.js ***!
-  \**************************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-/* provided dependency */ var PropTypes = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports.WrapperWithLink = void 0;
-var _react = _interopRequireDefault(__webpack_require__(/*! react */ "react"));
-var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
-var WrapperWithLink = function WrapperWithLink(props) {
-  var link = props.link,
-    children = props.children;
-  if (!link) {
-    return children;
-  }
-  return /*#__PURE__*/_react.default.createElement(_ui.Link, {
-    href: link,
-    target: "_blank",
-    underline: "none",
-    color: "inherit",
-    sx: {
-      '&:hover': {
-        color: 'inherit'
-      }
-    }
-  }, children);
-};
-exports.WrapperWithLink = WrapperWithLink;
-WrapperWithLink.propTypes = {
-  link: PropTypes.string,
-  children: PropTypes.any.isRequired
-};
-
-/***/ }),
-
-/***/ "../modules/notifications/assets/js/icons/x-icon.js":
-/*!**********************************************************!*\
-  !*** ../modules/notifications/assets/js/icons/x-icon.js ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-var _typeof = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "../node_modules/@babel/runtime/helpers/typeof.js");
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports.XIcon = void 0;
-var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "react"));
-var _extends2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/extends */ "../node_modules/@babel/runtime/helpers/extends.js"));
-var _ui = __webpack_require__(/*! @elementor/ui */ "@elementor/ui");
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-var XIcon = (0, _react.forwardRef)(function (props, ref) {
-  return /*#__PURE__*/_react.default.createElement(_ui.SvgIcon, (0, _extends2.default)({
-    viewBox: "0 0 24 24"
-  }, props, {
-    ref: ref
-  }), /*#__PURE__*/_react.default.createElement("path", {
-    fillRule: "evenodd",
-    clipRule: "evenodd",
-    d: "M18.5303 5.46967C18.8232 5.76256 18.8232 6.23744 18.5303 6.53033L6.53033 18.5303C6.23744 18.8232 5.76256 18.8232 5.46967 18.5303C5.17678 18.2374 5.17678 17.7626 5.46967 17.4697L17.4697 5.46967C17.7626 5.17678 18.2374 5.17678 18.5303 5.46967Z"
-  }), /*#__PURE__*/_react.default.createElement("path", {
-    fillRule: "evenodd",
-    clipRule: "evenodd",
-    d: "M5.46967 5.46967C5.76256 5.17678 6.23744 5.17678 6.53033 5.46967L18.5303 17.4697C18.8232 17.7626 18.8232 18.2374 18.5303 18.5303C18.2374 18.8232 17.7626 18.8232 17.4697 18.5303L5.46967 6.53033C5.17678 6.23744 5.17678 5.76256 5.46967 5.46967Z"
+    }, _callee);
   }));
-});
-exports.XIcon = XIcon;
+  return _fetchSteps.apply(this, arguments);
+}
+function fetchUserProgress() {
+  return _fetchUserProgress.apply(this, arguments);
+}
+function _fetchUserProgress() {
+  _fetchUserProgress = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+    var _response$data2;
+    var response;
+    return _regenerator.default.wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.next = 2;
+          return $e.data.get(_consts.USER_PROGRESS_ROUTE, {}, {
+            refresh: true
+          });
+        case 2:
+          response = _context2.sent;
+          return _context2.abrupt("return", (response === null || response === void 0 ? void 0 : (_response$data2 = response.data) === null || _response$data2 === void 0 ? void 0 : _response$data2.data) || null);
+        case 4:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2);
+  }));
+  return _fetchUserProgress.apply(this, arguments);
+}
+function updateStep(_x, _x2) {
+  return _updateStep.apply(this, arguments);
+}
+function _updateStep() {
+  _updateStep = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(id, data) {
+    return _regenerator.default.wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.next = 2;
+          return $e.data.update(_consts.STEPS_ROUTE, _objectSpread({
+            id: id
+          }, data), {
+            id: id
+          });
+        case 2:
+          return _context3.abrupt("return", _context3.sent);
+        case 3:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3);
+  }));
+  return _updateStep.apply(this, arguments);
+}
+function updateUserProgress(_x3) {
+  return _updateUserProgress.apply(this, arguments);
+}
+function _updateUserProgress() {
+  _updateUserProgress = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(data) {
+    return _regenerator.default.wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
+          return $e.data.update(_consts.USER_PROGRESS_ROUTE, data);
+        case 2:
+          return _context4.abrupt("return", _context4.sent);
+        case 3:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4);
+  }));
+  return _updateUserProgress.apply(this, arguments);
+}
+function getAndUpdateStep(id, step, key, value) {
+  if (step.config.id !== id) {
+    return step;
+  }
+  return _objectSpread(_objectSpread({}, step), {}, (0, _defineProperty2.default)({}, key, value));
+}
+function addMixpanelTrackingChecklistSteps(name, action) {
+  var element = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'button';
+  var documentMetaData = getDocumentMetaDataMixpanel();
+  name = name.replace(/_/g, '');
+  var eventName = "checklist_steps_".concat(action, "_").concat(name);
+  return elementor.editorEvents.dispatchEvent(eventName, _objectSpread({
+    location: elementor.editorEvents.config.locations.elementorEditor,
+    secondaryLocation: elementor.editorEvents.config.secondaryLocations.checklistSteps,
+    trigger: elementor.editorEvents.config.triggers.click,
+    element: elementor.editorEvents.config.elements[element]
+  }, documentMetaData));
+}
+function addMixpanelTrackingChecklistHeader(name) {
+  var documentMetaData = getDocumentMetaDataMixpanel();
+  return elementor.editorEvents.dispatchEvent(elementor.editorEvents.config.names.elementorEditor[name], _objectSpread({
+    location: elementor.editorEvents.config.locations.elementorEditor,
+    secondaryLocation: elementor.editorEvents.config.secondaryLocations.checklistHeader,
+    trigger: elementor.editorEvents.config.triggers.click,
+    element: elementor.editorEvents.config.elements.buttonIcon
+  }, documentMetaData));
+}
+function addMixpanelTrackingChecklistTopBar(togglePopupState) {
+  var documentMetaData = getDocumentMetaDataMixpanel();
+  var name = !togglePopupState ? 'launchpadOn' : 'launchpadOff';
+  return elementor.editorEvents.dispatchEvent(elementor.editorEvents.config.names.topBar[name], _objectSpread({
+    location: elementor.editorEvents.config.locations.topBar,
+    secondaryLocation: elementor.editorEvents.config.secondaryLocations.launchpad,
+    trigger: elementor.editorEvents.config.triggers.toggleClick,
+    element: elementor.editorEvents.config.elements.buttonIcon
+  }, documentMetaData));
+}
+function getDocumentMetaDataMixpanel() {
+  var postId = elementor.getPreviewContainer().document.config.id;
+  var postTitle = elementor.getPreviewContainer().model.attributes.settings.attributes.post_title;
+  var postTypeTitle = elementor.getPreviewContainer().document.config.post_type_title;
+  var documentType = elementor.getPreviewContainer().document.config.type;
+  return {
+    postId: postId,
+    postTitle: postTitle,
+    postTypeTitle: postTypeTitle,
+    documentType: documentType
+  };
+}
 
 /***/ }),
 
@@ -3362,14 +4208,47 @@ module.exports = ReactDOM;
 
 /***/ }),
 
-/***/ "@elementor/icons/SpeakerphoneIcon":
-/*!********************************************************!*\
-  !*** external "elementorV2.icons['SpeakerphoneIcon']" ***!
-  \********************************************************/
+/***/ "@elementor/editor-app-bar":
+/*!*******************************************!*\
+  !*** external "elementorV2.editorAppBar" ***!
+  \*******************************************/
 /***/ ((module) => {
 
 "use strict";
-module.exports = elementorV2.icons['SpeakerphoneIcon'];
+module.exports = elementorV2.editorAppBar;
+
+/***/ }),
+
+/***/ "@elementor/editor-v1-adapters":
+/*!***********************************************!*\
+  !*** external "elementorV2.editorV1Adapters" ***!
+  \***********************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = elementorV2.editorV1Adapters;
+
+/***/ }),
+
+/***/ "@elementor/icons":
+/*!************************************!*\
+  !*** external "elementorV2.icons" ***!
+  \************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = elementorV2.icons;
+
+/***/ }),
+
+/***/ "@elementor/icons/RocketIcon":
+/*!**************************************************!*\
+  !*** external "elementorV2.icons['RocketIcon']" ***!
+  \**************************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = elementorV2.icons['RocketIcon'];
 
 /***/ }),
 
@@ -3423,27 +4302,184 @@ module.exports = _arrayWithHoles, module.exports.__esModule = true, module.expor
 
 /***/ }),
 
-/***/ "../node_modules/@babel/runtime/helpers/extends.js":
-/*!*********************************************************!*\
-  !*** ../node_modules/@babel/runtime/helpers/extends.js ***!
-  \*********************************************************/
+/***/ "../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":
+/*!*******************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js ***!
+  \*******************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray.js */ "../node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return arrayLikeToArray(arr);
+}
+module.exports = _arrayWithoutHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/assertThisInitialized.js":
+/*!***********************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/assertThisInitialized.js ***!
+  \***********************************************************************/
 /***/ ((module) => {
 
-function _extends() {
-  module.exports = _extends = Object.assign ? Object.assign.bind() : function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-    return target;
-  }, module.exports.__esModule = true, module.exports["default"] = module.exports;
-  return _extends.apply(this, arguments);
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+  return self;
 }
-module.exports = _extends, module.exports.__esModule = true, module.exports["default"] = module.exports;
+module.exports = _assertThisInitialized, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/asyncToGenerator.js":
+/*!******************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/asyncToGenerator.js ***!
+  \******************************************************************/
+/***/ ((module) => {
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+      args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+      _next(undefined);
+    });
+  };
+}
+module.exports = _asyncToGenerator, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/classCallCheck.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/classCallCheck.js ***!
+  \****************************************************************/
+/***/ ((module) => {
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+module.exports = _classCallCheck, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/createClass.js":
+/*!*************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/createClass.js ***!
+  \*************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var toPropertyKey = __webpack_require__(/*! ./toPropertyKey.js */ "../node_modules/@babel/runtime/helpers/toPropertyKey.js");
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, toPropertyKey(descriptor.key), descriptor);
+  }
+}
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
+  return Constructor;
+}
+module.exports = _createClass, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/defineProperty.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/defineProperty.js ***!
+  \****************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var toPropertyKey = __webpack_require__(/*! ./toPropertyKey.js */ "../node_modules/@babel/runtime/helpers/toPropertyKey.js");
+function _defineProperty(obj, key, value) {
+  key = toPropertyKey(key);
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/getPrototypeOf.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/getPrototypeOf.js ***!
+  \****************************************************************/
+/***/ ((module) => {
+
+function _getPrototypeOf(o) {
+  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports;
+  return _getPrototypeOf(o);
+}
+module.exports = _getPrototypeOf, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/inherits.js":
+/*!**********************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/inherits.js ***!
+  \**********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf.js */ "../node_modules/@babel/runtime/helpers/setPrototypeOf.js");
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  Object.defineProperty(subClass, "prototype", {
+    writable: false
+  });
+  if (superClass) setPrototypeOf(subClass, superClass);
+}
+module.exports = _inherits, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -3459,6 +4495,19 @@ function _interopRequireDefault(obj) {
   };
 }
 module.exports = _interopRequireDefault, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/iterableToArray.js":
+/*!*****************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/iterableToArray.js ***!
+  \*****************************************************************/
+/***/ ((module) => {
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+module.exports = _iterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -3512,6 +4561,369 @@ module.exports = _nonIterableRest, module.exports.__esModule = true, module.expo
 
 /***/ }),
 
+/***/ "../node_modules/@babel/runtime/helpers/nonIterableSpread.js":
+/*!*******************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/nonIterableSpread.js ***!
+  \*******************************************************************/
+/***/ ((module) => {
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+module.exports = _nonIterableSpread, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js":
+/*!***************************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js ***!
+  \***************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _typeof = (__webpack_require__(/*! ./typeof.js */ "../node_modules/@babel/runtime/helpers/typeof.js")["default"]);
+var assertThisInitialized = __webpack_require__(/*! ./assertThisInitialized.js */ "../node_modules/@babel/runtime/helpers/assertThisInitialized.js");
+function _possibleConstructorReturn(self, call) {
+  if (call && (_typeof(call) === "object" || typeof call === "function")) {
+    return call;
+  } else if (call !== void 0) {
+    throw new TypeError("Derived constructors may only return object or undefined");
+  }
+  return assertThisInitialized(self);
+}
+module.exports = _possibleConstructorReturn, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/regeneratorRuntime.js":
+/*!********************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/regeneratorRuntime.js ***!
+  \********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _typeof = (__webpack_require__(/*! ./typeof.js */ "../node_modules/@babel/runtime/helpers/typeof.js")["default"]);
+function _regeneratorRuntime() {
+  "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+  module.exports = _regeneratorRuntime = function _regeneratorRuntime() {
+    return e;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports;
+  var t,
+    e = {},
+    r = Object.prototype,
+    n = r.hasOwnProperty,
+    o = Object.defineProperty || function (t, e, r) {
+      t[e] = r.value;
+    },
+    i = "function" == typeof Symbol ? Symbol : {},
+    a = i.iterator || "@@iterator",
+    c = i.asyncIterator || "@@asyncIterator",
+    u = i.toStringTag || "@@toStringTag";
+  function define(t, e, r) {
+    return Object.defineProperty(t, e, {
+      value: r,
+      enumerable: !0,
+      configurable: !0,
+      writable: !0
+    }), t[e];
+  }
+  try {
+    define({}, "");
+  } catch (t) {
+    define = function define(t, e, r) {
+      return t[e] = r;
+    };
+  }
+  function wrap(t, e, r, n) {
+    var i = e && e.prototype instanceof Generator ? e : Generator,
+      a = Object.create(i.prototype),
+      c = new Context(n || []);
+    return o(a, "_invoke", {
+      value: makeInvokeMethod(t, r, c)
+    }), a;
+  }
+  function tryCatch(t, e, r) {
+    try {
+      return {
+        type: "normal",
+        arg: t.call(e, r)
+      };
+    } catch (t) {
+      return {
+        type: "throw",
+        arg: t
+      };
+    }
+  }
+  e.wrap = wrap;
+  var h = "suspendedStart",
+    l = "suspendedYield",
+    f = "executing",
+    s = "completed",
+    y = {};
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+  var p = {};
+  define(p, a, function () {
+    return this;
+  });
+  var d = Object.getPrototypeOf,
+    v = d && d(d(values([])));
+  v && v !== r && n.call(v, a) && (p = v);
+  var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p);
+  function defineIteratorMethods(t) {
+    ["next", "throw", "return"].forEach(function (e) {
+      define(t, e, function (t) {
+        return this._invoke(e, t);
+      });
+    });
+  }
+  function AsyncIterator(t, e) {
+    function invoke(r, o, i, a) {
+      var c = tryCatch(t[r], t, o);
+      if ("throw" !== c.type) {
+        var u = c.arg,
+          h = u.value;
+        return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) {
+          invoke("next", t, i, a);
+        }, function (t) {
+          invoke("throw", t, i, a);
+        }) : e.resolve(h).then(function (t) {
+          u.value = t, i(u);
+        }, function (t) {
+          return invoke("throw", t, i, a);
+        });
+      }
+      a(c.arg);
+    }
+    var r;
+    o(this, "_invoke", {
+      value: function value(t, n) {
+        function callInvokeWithMethodAndArg() {
+          return new e(function (e, r) {
+            invoke(t, n, e, r);
+          });
+        }
+        return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
+      }
+    });
+  }
+  function makeInvokeMethod(e, r, n) {
+    var o = h;
+    return function (i, a) {
+      if (o === f) throw new Error("Generator is already running");
+      if (o === s) {
+        if ("throw" === i) throw a;
+        return {
+          value: t,
+          done: !0
+        };
+      }
+      for (n.method = i, n.arg = a;;) {
+        var c = n.delegate;
+        if (c) {
+          var u = maybeInvokeDelegate(c, n);
+          if (u) {
+            if (u === y) continue;
+            return u;
+          }
+        }
+        if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) {
+          if (o === h) throw o = s, n.arg;
+          n.dispatchException(n.arg);
+        } else "return" === n.method && n.abrupt("return", n.arg);
+        o = f;
+        var p = tryCatch(e, r, n);
+        if ("normal" === p.type) {
+          if (o = n.done ? s : l, p.arg === y) continue;
+          return {
+            value: p.arg,
+            done: n.done
+          };
+        }
+        "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg);
+      }
+    };
+  }
+  function maybeInvokeDelegate(e, r) {
+    var n = r.method,
+      o = e.iterator[n];
+    if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y;
+    var i = tryCatch(o, e.iterator, r.arg);
+    if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y;
+    var a = i.arg;
+    return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y);
+  }
+  function pushTryEntry(t) {
+    var e = {
+      tryLoc: t[0]
+    };
+    1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e);
+  }
+  function resetTryEntry(t) {
+    var e = t.completion || {};
+    e.type = "normal", delete e.arg, t.completion = e;
+  }
+  function Context(t) {
+    this.tryEntries = [{
+      tryLoc: "root"
+    }], t.forEach(pushTryEntry, this), this.reset(!0);
+  }
+  function values(e) {
+    if (e || "" === e) {
+      var r = e[a];
+      if (r) return r.call(e);
+      if ("function" == typeof e.next) return e;
+      if (!isNaN(e.length)) {
+        var o = -1,
+          i = function next() {
+            for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next;
+            return next.value = t, next.done = !0, next;
+          };
+        return i.next = i;
+      }
+    }
+    throw new TypeError(_typeof(e) + " is not iterable");
+  }
+  return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", {
+    value: GeneratorFunctionPrototype,
+    configurable: !0
+  }), o(GeneratorFunctionPrototype, "constructor", {
+    value: GeneratorFunction,
+    configurable: !0
+  }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) {
+    var e = "function" == typeof t && t.constructor;
+    return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name));
+  }, e.mark = function (t) {
+    return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t;
+  }, e.awrap = function (t) {
+    return {
+      __await: t
+    };
+  }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () {
+    return this;
+  }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) {
+    void 0 === i && (i = Promise);
+    var a = new AsyncIterator(wrap(t, r, n, o), i);
+    return e.isGeneratorFunction(r) ? a : a.next().then(function (t) {
+      return t.done ? t.value : a.next();
+    });
+  }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () {
+    return this;
+  }), define(g, "toString", function () {
+    return "[object Generator]";
+  }), e.keys = function (t) {
+    var e = Object(t),
+      r = [];
+    for (var n in e) r.push(n);
+    return r.reverse(), function next() {
+      for (; r.length;) {
+        var t = r.pop();
+        if (t in e) return next.value = t, next.done = !1, next;
+      }
+      return next.done = !0, next;
+    };
+  }, e.values = values, Context.prototype = {
+    constructor: Context,
+    reset: function reset(e) {
+      if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t);
+    },
+    stop: function stop() {
+      this.done = !0;
+      var t = this.tryEntries[0].completion;
+      if ("throw" === t.type) throw t.arg;
+      return this.rval;
+    },
+    dispatchException: function dispatchException(e) {
+      if (this.done) throw e;
+      var r = this;
+      function handle(n, o) {
+        return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o;
+      }
+      for (var o = this.tryEntries.length - 1; o >= 0; --o) {
+        var i = this.tryEntries[o],
+          a = i.completion;
+        if ("root" === i.tryLoc) return handle("end");
+        if (i.tryLoc <= this.prev) {
+          var c = n.call(i, "catchLoc"),
+            u = n.call(i, "finallyLoc");
+          if (c && u) {
+            if (this.prev < i.catchLoc) return handle(i.catchLoc, !0);
+            if (this.prev < i.finallyLoc) return handle(i.finallyLoc);
+          } else if (c) {
+            if (this.prev < i.catchLoc) return handle(i.catchLoc, !0);
+          } else {
+            if (!u) throw new Error("try statement without catch or finally");
+            if (this.prev < i.finallyLoc) return handle(i.finallyLoc);
+          }
+        }
+      }
+    },
+    abrupt: function abrupt(t, e) {
+      for (var r = this.tryEntries.length - 1; r >= 0; --r) {
+        var o = this.tryEntries[r];
+        if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) {
+          var i = o;
+          break;
+        }
+      }
+      i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null);
+      var a = i ? i.completion : {};
+      return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a);
+    },
+    complete: function complete(t, e) {
+      if ("throw" === t.type) throw t.arg;
+      return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y;
+    },
+    finish: function finish(t) {
+      for (var e = this.tryEntries.length - 1; e >= 0; --e) {
+        var r = this.tryEntries[e];
+        if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y;
+      }
+    },
+    "catch": function _catch(t) {
+      for (var e = this.tryEntries.length - 1; e >= 0; --e) {
+        var r = this.tryEntries[e];
+        if (r.tryLoc === t) {
+          var n = r.completion;
+          if ("throw" === n.type) {
+            var o = n.arg;
+            resetTryEntry(r);
+          }
+          return o;
+        }
+      }
+      throw new Error("illegal catch attempt");
+    },
+    delegateYield: function delegateYield(e, r, n) {
+      return this.delegate = {
+        iterator: values(e),
+        resultName: r,
+        nextLoc: n
+      }, "next" === this.method && (this.arg = t), y;
+    }
+  }, e;
+}
+module.exports = _regeneratorRuntime, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/setPrototypeOf.js":
+/*!****************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/setPrototypeOf.js ***!
+  \****************************************************************/
+/***/ ((module) => {
+
+function _setPrototypeOf(o, p) {
+  module.exports = _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports;
+  return _setPrototypeOf(o, p);
+}
+module.exports = _setPrototypeOf, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
 /***/ "../node_modules/@babel/runtime/helpers/slicedToArray.js":
 /*!***************************************************************!*\
   !*** ../node_modules/@babel/runtime/helpers/slicedToArray.js ***!
@@ -3526,6 +4938,60 @@ function _slicedToArray(arr, i) {
   return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
 }
 module.exports = _slicedToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/toConsumableArray.js":
+/*!*******************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/toConsumableArray.js ***!
+  \*******************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var arrayWithoutHoles = __webpack_require__(/*! ./arrayWithoutHoles.js */ "../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js");
+var iterableToArray = __webpack_require__(/*! ./iterableToArray.js */ "../node_modules/@babel/runtime/helpers/iterableToArray.js");
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+var nonIterableSpread = __webpack_require__(/*! ./nonIterableSpread.js */ "../node_modules/@babel/runtime/helpers/nonIterableSpread.js");
+function _toConsumableArray(arr) {
+  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
+}
+module.exports = _toConsumableArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/toPrimitive.js":
+/*!*************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/toPrimitive.js ***!
+  \*************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _typeof = (__webpack_require__(/*! ./typeof.js */ "../node_modules/@babel/runtime/helpers/typeof.js")["default"]);
+function toPrimitive(t, r) {
+  if ("object" != _typeof(t) || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != _typeof(i)) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+module.exports = toPrimitive, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/helpers/toPropertyKey.js":
+/*!***************************************************************!*\
+  !*** ../node_modules/@babel/runtime/helpers/toPropertyKey.js ***!
+  \***************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var _typeof = (__webpack_require__(/*! ./typeof.js */ "../node_modules/@babel/runtime/helpers/typeof.js")["default"]);
+var toPrimitive = __webpack_require__(/*! ./toPrimitive.js */ "../node_modules/@babel/runtime/helpers/toPrimitive.js");
+function toPropertyKey(t) {
+  var i = toPrimitive(t, "string");
+  return "symbol" == _typeof(i) ? i : String(i);
+}
+module.exports = toPropertyKey, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -3564,6 +5030,31 @@ function _unsupportedIterableToArray(o, minLen) {
   if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
 }
 module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "../node_modules/@babel/runtime/regenerator/index.js":
+/*!***********************************************************!*\
+  !*** ../node_modules/@babel/runtime/regenerator/index.js ***!
+  \***********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+// TODO(Babel 8): Remove this file.
+
+var runtime = __webpack_require__(/*! ../helpers/regeneratorRuntime */ "../node_modules/@babel/runtime/helpers/regeneratorRuntime.js")();
+module.exports = runtime;
+
+// Copied from https://github.com/facebook/regenerator/blob/main/packages/runtime/runtime.js#L736=
+try {
+  regeneratorRuntime = runtime;
+} catch (accidentalStrictMode) {
+  if (typeof globalThis === "object") {
+    globalThis.regeneratorRuntime = runtime;
+  } else {
+    Function("r", "regeneratorRuntime = r")(runtime);
+  }
+}
+
 
 /***/ }),
 
@@ -8530,21 +10021,63 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
-/*!****************************************************!*\
-  !*** ../modules/notifications/assets/js/editor.js ***!
-  \****************************************************/
+/*!************************************************!*\
+  !*** ../modules/checklist/assets/js/editor.js ***!
+  \************************************************/
 
 
-var _editorV = __webpack_require__(/*! ./components/editor-v1 */ "../modules/notifications/assets/js/components/editor-v1.js");
-var _editorV2 = __webpack_require__(/*! ./components/editor-v2 */ "../modules/notifications/assets/js/components/editor-v2.js");
-var _window, _window$elementorV;
-if ((_window = window) !== null && _window !== void 0 && (_window$elementorV = _window.elementorV2) !== null && _window$elementorV !== void 0 && _window$elementorV.editorAppBar) {
-  (0, _editorV2.editorV2)();
-} else {
-  (0, _editorV.editorV1)();
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ "../node_modules/@babel/runtime/regenerator/index.js"));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "../node_modules/@babel/runtime/helpers/asyncToGenerator.js"));
+var _editorV = __webpack_require__(/*! ./editor-v-2 */ "../modules/checklist/assets/js/editor-v-2.js");
+var _component = _interopRequireDefault(__webpack_require__(/*! ./component */ "../modules/checklist/assets/js/component.js"));
+var _consts = __webpack_require__(/*! ./utils/consts */ "../modules/checklist/assets/js/utils/consts.js");
+var _functions = __webpack_require__(/*! ./utils/functions */ "../modules/checklist/assets/js/utils/functions.js");
+$e.components.register(new _component.default());
+(0, _editorV.editorV2)();
+elementorCommon.elements.$window.on('elementor:loaded', elementorLoaded);
+function elementorLoaded() {
+  elementor.on('document:loaded', checklistStartup);
+  elementorCommon.elements.$window.off('elementor:loaded', elementorLoaded);
+}
+function checklistStartup() {
+  return _checklistStartup.apply(this, arguments);
+}
+function _checklistStartup() {
+  _checklistStartup = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+    var shouldHide, userProgress, editorVisitCount;
+    return _regenerator.default.wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          shouldHide = 'yes' !== elementor.getPreferences('show_launchpad_checklist');
+          if (!shouldHide) {
+            _context.next = 5;
+            break;
+          }
+          $e.commands.run('checklist/toggle-icon', false);
+          _context.next = 10;
+          break;
+        case 5:
+          _context.next = 7;
+          return (0, _functions.fetchUserProgress)();
+        case 7:
+          userProgress = _context.sent;
+          editorVisitCount = (userProgress === null || userProgress === void 0 ? void 0 : userProgress[_consts.USER_PROGRESS.EDITOR_VISIT_COUNT]) || null;
+          if (2 === editorVisitCount) {
+            (0, _functions.toggleChecklistPopup)();
+          }
+        case 10:
+          elementor.off('document:loaded', checklistStartup);
+        case 11:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee);
+  }));
+  return _checklistStartup.apply(this, arguments);
 }
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=editor-notifications.js.map
+//# sourceMappingURL=checklist.js.map
